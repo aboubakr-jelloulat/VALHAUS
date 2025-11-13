@@ -1,0 +1,76 @@
+﻿@model Category
+
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-form.css" />
+}
+
+<!-- Header Section -->
+<div class="form-header">
+    <h1>VALHÄUS</h1>
+    <div class="accent-line"><span></span></div>
+    <h2 class="form-title">Edit Category</h2>
+    <p class="form-subtitle"> Modify the category details below and save your changes.</p>
+</div>
+
+<!-- Form Container -->
+
+<div class="form-container">
+    <form asp-controller="Category" asp-action="Edit" method="post" class="category-form">
+
+        <!-- Hidden field to send the ID -->
+        <input asp-for="Id" type="hidden" />
+
+        <!-- Category Name Field -->
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">
+                <i class="bi bi-tag"></i>
+                Category Name
+            </label>
+            <input asp-for="Name"
+                   type="text"
+                   class="form-input"
+                   placeholder="Chairs, Lighting, Pouffes..."
+                   required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- Display Order Field -->
+        <div class="form-group">
+            <label asp-for="DisplayOrder" class="form-label">
+                <i class="bi bi-sort-numeric-down"></i>
+                Display Order
+            </label>
+            <input asp-for="DisplayOrder"
+                   type="number"
+                   class="form-input"
+                   placeholder="1, 2, 3..."
+                   min="1"
+                   required />
+            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">
+                <i class="bi bi-check-circle"></i>
+                Update Category
+            </button>
+            <a asp-controller="Category" asp-action="Index" class="btn-cancel">
+                <i class="bi bi-x-circle"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+

@@ -1,0 +1,25 @@
+﻿@* Partial View = A reusable view component that can be included in other views.
+It helps you avoid repeating the same HTML and logic across multiple pages. *@
+
+
+@if (TempData["success"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"> </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script type="text/javascript">
+        toastr.success('@TempData["success"]');
+    </script>
+
+}
+@if (TempData["error"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"> </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script>
+        toastr.error('@TempData["error"]');
+    </script>
+}

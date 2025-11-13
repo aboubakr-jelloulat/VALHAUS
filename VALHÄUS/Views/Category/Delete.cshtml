@@ -1,0 +1,66 @@
+﻿@model Category
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-form.css" />
+    <link rel="stylesheet" href="~/css/Category/category-management.css" />
+}
+
+<!-- Header Section -->
+<div class="form-header">
+    <h1>VALHÄUS</h1>
+    <div class="accent-line"><span></span></div>
+    <h2 class="form-title">Delete Category</h2>
+    <p class="form-subtitle warning-text">
+        <i class="bi bi-exclamation-triangle"></i>
+        Are you sure you want to delete this category? This action cannot be undone.
+    </p>
+</div>
+
+<!-- Form Container -->
+<div class="form-container delete-container">
+    <form asp-controller="Category" asp-action="Delete" method="post" class="category-form">
+
+        <!-- Hidden ID field (IMPORTANT!) -->
+        <input asp-for="Id" type="hidden" />
+
+        <!-- Category Name Field (Read-only) -->
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">
+                <i class="bi bi-tag"></i>
+                Category Name
+            </label>
+            <input asp-for="Name"
+                   type="text"
+                   class="form-input input-readonly"
+                   readonly />
+        </div>
+
+        <!-- Display Order Field (Read-only) -->
+        <div class="form-group">
+            <label asp-for="DisplayOrder" class="form-label">
+                <i class="bi bi-sort-numeric-down"></i>
+                Display Order
+            </label>
+            <input asp-for="DisplayOrder"
+                   type="number"
+                   class="form-input input-readonly"
+                   readonly />
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+            <button type="submit" class="btn-delete">
+                <i class="bi bi-trash3"></i>
+                Delete Category
+            </button>
+            <a asp-controller="Category" asp-action="Index" class="btn-cancel">
+                <i class="bi bi-x-circle"></i>
+                Cancel
+            </a>
+        </div>
+
+        
+    </form>
+</div>
+

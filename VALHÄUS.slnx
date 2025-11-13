@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Valhaus.Data/Valhaus.Data.csproj" />
+  <Project Path="Valhaus.Models/Valhaus.Models.csproj" />
+  <Project Path="Valhaus.Utils/Valhaus.Utils.csproj" />
+  <Project Path="VALHÄUS/VALHÄUS.csproj" />
+</Solution>

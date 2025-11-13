@@ -1,0 +1,90 @@
+﻿@model Category
+
+
+@section Styles 
+{
+    <link rel="stylesheet" href="~/css/Category/category-form.css" />
+}
+
+<!-- Header Section -->
+<div class="form-header">
+    <h1>VALHÄUS</h1>
+    <div class="accent-line"><span></span></div>
+    <h2 class="form-title">Create Category</h2>
+    <p class="form-subtitle">Add a new category to your collection</p>
+</div>
+
+<!-- Form Container -->
+<div class="form-container">
+    <form asp-controller="Category" asp-action="CreateNewCategory" method="post" class="category-form">
+        
+        @* all Error validation  *@
+
+        @* <div asp-validation-summary="All"></div> *@
+
+        <!-- Category Name Field -->
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">
+                <i class="bi bi-tag"></i>
+                Category Name
+            </label>
+            <input asp-for="Name" 
+                   type="text" 
+                   class="form-input" 
+                   placeholder=" Chairs, Lighting, Pouffes ..."
+                   required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- Display Order Field -->
+        <div class="form-group">
+            <label asp-for="DisplayOrder" class="form-label">
+                <i class="bi bi-sort-numeric-down"></i>
+                Display Order
+            </label>
+            <input asp-for="DisplayOrder" 
+                   type="number" 
+                   class="form-input" 
+                   placeholder="1, 2, 3..."
+                   min="1"
+                   required />
+            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">
+                <i class="bi bi-check-circle"></i>
+                Create Category
+            </button>
+            @* Cancel return you to the Category Controller & Index action methode *@
+            <a asp-controller="Category" asp-action="Index" class="btn-cancel">
+                <i class="bi bi-x-circle"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+@* section scripts : It's a way to add JavaScript files ONLY to specific pages instead of loading them everywhere.
+
+partial ... : Problem Without It:
+    If you put validation scripts in _Layout.cshtml, they load on EVERY page (Home, Privacy, Category list, etc.) even when you don't need them!
+
+Solution With @section Scripts:
+    Validation scripts only load on pages with forms (Create, Edit) 
+
+_ValidationScriptsPartial contains JavaScript libraries for client-side validation:
+    Check if fields are empty before sending to server
+     Show error messages instantly (no page reload)
+ *@
+
+
+

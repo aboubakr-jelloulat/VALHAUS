@@ -1,0 +1,89 @@
+﻿@model List<Category>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-management.css" />
+}
+
+
+
+<div class="header">
+    <div class="header-content">
+        <div class="header-actions-left"></div>
+
+        <!-- Header -->
+        <div class="header-text-center">
+            <h1>VALHÄUS</h1>
+            <div class="accent-line"><span></span></div>
+            <div class="subtitle">CATEGORY MANAGEMENT</div>
+        </div>
+
+        <!-- Add Category Button -->
+        <div class="header-actions-right">
+            <a asp-controller="Category" asp-action="CreateNewCategory" class="btn-valhaus">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Add Category</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="mini-table">
+        <thead>
+            <tr>
+                <th class="category-name">Category Name</th>
+                <th class="display-order">Display Order</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model.OrderBy(it => it.DisplayOrder))
+                {
+                    <tr>
+                        <td class="category-name">@item.Name</td>
+                        <td class="display-order">@item.DisplayOrder</td>
+
+                        @* Edite & Delete Button  *@
+
+                        @* asp-route-id="@item.Id" ??
+                            Meaning: "Send the category's ID as a parameter"
+                                asp-route- = "I'm sending a parameter called..."
+                                id = "...named 'id'"
+                                @item.Id = "...with the value from the current category"
+                                Example: If @item.Id = 5, it sends id=5 to the controller
+
+                                ASP.NET generates this URL:
+                                /Category/Delete/3
+                                ↑        ↑     ↑
+                                Controller Action  ID parameter *@
+
+
+                        <td class="actions-column">
+                            <div class="action-buttons">
+                                <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id" class="btn-action btn-edit" title="Edit Category">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id" class="btn-action btn-delete" title="Delete Category">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                        No categories found. Click "Add Category" to create one.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

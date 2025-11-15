@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
+using VALHÄUS.Areas.Customer.Controllers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +33,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
 

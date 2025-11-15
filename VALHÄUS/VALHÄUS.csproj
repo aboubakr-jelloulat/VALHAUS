@@ -8,12 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Valhaus.Data\Valhaus.Data.csproj" />
     <ProjectReference Include="..\Valhaus.Models\Valhaus.Models.csproj" />
     <ProjectReference Include="..\Valhaus.Utils\Valhaus.Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

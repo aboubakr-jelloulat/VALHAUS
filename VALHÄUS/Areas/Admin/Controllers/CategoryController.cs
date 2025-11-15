@@ -5,8 +5,9 @@ using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
 using Valhaus.Models;
 
-namespace VALHÄUS.Controllers
+namespace VALHÄUS.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

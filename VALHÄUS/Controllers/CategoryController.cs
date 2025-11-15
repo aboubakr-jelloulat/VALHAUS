@@ -1,24 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Valhaus.Data.Data;
+using Valhaus.Data.Repository.IRepository;
+using Valhaus.Data.Repository.Repositories;
 using Valhaus.Models;
 
 namespace VALHÄUS.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
         // Constructor - ASP.NET Core AUTOMATICALLY injects the db here
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this._db = db;
+            _unitOfWork = unitOfWork;
         }
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
-            List<Category> categories = await _db.Categories.ToListAsync();
+            List<Category> categories = _unitOfWork.Categories.GetAll().ToList();
             return View(categories);
         }
+
 
         public ActionResult CreateNewCategory()
         {
@@ -32,8 +35,8 @@ namespace VALHÄUS.Controllers
             
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(category);
-                _db.SaveChanges();
+                _unitOfWork.Categories.Add(category);
+                _unitOfWork.Save();
                 TempData["success"] = "Category created successfully!";
                 return RedirectToAction("Index");
                 //if you need to redirect it in another place not in the same Controller
@@ -54,7 +57,7 @@ namespace VALHÄUS.Controllers
             {
                 return NotFound();
             }
-            Category? category = _db.Categories.Find(id);
+            Category? category = _unitOfWork.Categories.Get(item => item.Id == id);
             if (category is null)
             {
                 return NotFound();
@@ -68,9 +71,9 @@ namespace VALHÄUS.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(category);
-                _db.SaveChanges();
-                TempData["success"] = "Category updated successfully!";
+                _unitOfWork.Categories.Update(category);
+                _unitOfWork.Save();
+                 TempData["success"] = "Category updated successfully!";
 
                 return RedirectToAction("Index");
             }
@@ -87,7 +90,7 @@ namespace VALHÄUS.Controllers
             {
                 return NotFound();
             }
-            Category? category = _db.Categories.Find(id);
+            Category? category = _unitOfWork.Categories.Get(item => item.Id == id);
             if (category is null)
             {
                 return NotFound();
@@ -98,14 +101,14 @@ namespace VALHÄUS.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeletePOST(int? id)
         {
-            Category? category_to_delete = _db.Categories.Find(id);
+            Category? category_to_delete = _unitOfWork.Categories.Get(item => item.Id == id);
 
             if (category_to_delete is null)
                 return NotFound();
 
-            _db.Categories.Remove(category_to_delete);
+            _unitOfWork.Categories.Remove(category_to_delete);
 
-            _db.SaveChanges();
+            _unitOfWork.Save();
             TempData["success"] = "Category deleted successfully!";
 
             return RedirectToAction("Index");

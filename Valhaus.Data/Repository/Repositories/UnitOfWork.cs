@@ -14,11 +14,13 @@ namespace Valhaus.Data.Repository.Repositories
         private readonly ApplicationDbContext _db;
 
         public ICategoryRepository Categories { get; private set; }
+        public IProductRepository Products { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _db = context;
             Categories = new CategoryRepository(_db);
+            Products = new ProductRepository(_db);
         }
 
 

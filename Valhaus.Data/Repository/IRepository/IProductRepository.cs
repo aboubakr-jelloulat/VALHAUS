@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Valhaus.Models;
+using Valhaus.Models.Models;
 
 namespace Valhaus.Data.Repository.IRepository
 {
-    public interface IUnitOfWork
+    public interface IProductRepository : IRepository<Product>
     {
-        ICategoryRepository Categories { get; }
-        IProductRepository Products { get; }
-        void Save();
+        void Update(Product product);
     }
-
 }

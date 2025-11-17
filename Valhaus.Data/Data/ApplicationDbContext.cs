@@ -28,10 +28,47 @@ namespace Valhaus.Data.Data
                     new Category { Id = 3, Name = "Accessories", DisplayOrder = 3 }
                 );
 
-            //modelBuilder.Entity<Product>().HasData
-            //    (
 
-            //    );
+            modelBuilder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id = 1,
+                    Title = "Oslo Coffee Table",
+                    Description = "Low-profile oak coffee table with rounded corners — minimalist Scandinavian design.",
+                    SKU = "VH-CT-001",
+                    Brand = "Valhaus",
+                    ListPrice = 499.00,
+                    Price = 449.00,
+                    Price50 = 399.00,
+                    Price100 = 349.00
+                },
+
+                new Product
+                {
+                    Id = 2,
+                    Title = "Nordic Ceramic Vase - Small",
+                    Description = "Hand-glazed ceramic vase in matte white — understated elegance.",
+                    SKU = "VH-VS-001",
+                    Brand = "Valhaus",
+                    ListPrice = 59.99,
+                    Price = 49.99,
+                    Price50 = 39.99,
+                    Price100 = 29.99
+                },
+
+                new Product
+                {
+                    Id = 3,
+                    Title = "Nord Modular Sofa - Corner",
+                    Description = "Corner modular sofa with low profile and wooden base — configurable layout.",
+                    SKU = "VH-SF-002",
+                    Brand = "Norda",
+                    ListPrice = 3299.00,
+                    Price = 2999.00,
+                    Price50 = 2699.00,
+                    Price100 = 2399.00
+                }
+            );
         }
     }
 }

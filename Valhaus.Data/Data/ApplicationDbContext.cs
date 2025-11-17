@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Valhaus.Models;
+using Valhaus.Models.Models;
 namespace Valhaus.Data.Data
 {
     public class ApplicationDbContext : DbContext
@@ -16,6 +17,7 @@ namespace Valhaus.Data.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +27,11 @@ namespace Valhaus.Data.Data
                     new Category { Id = 2, Name = "Sofas", DisplayOrder = 2 },
                     new Category { Id = 3, Name = "Accessories", DisplayOrder = 3 }
                 );
+
+            //modelBuilder.Entity<Product>().HasData
+            //    (
+
+            //    );
         }
     }
 }

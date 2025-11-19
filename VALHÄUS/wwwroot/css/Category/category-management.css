@@ -472,3 +472,81 @@ body
         box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
     }
 
+
+
+/* Product  Table  */
+
+
+
+/* Make table bigger and better spaced */
+.mini-table {
+    width: 100%;
+    font-size: 1rem;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+    /* Each row like a card */
+    .mini-table tbody tr {
+        background: #1b1b1b;
+        border-radius: 8px;
+    }
+
+    .mini-table tbody td {
+        padding: 14px 18px;
+    }
+
+    /* Header gold style */
+    .mini-table thead th {
+        color: #D8B256;
+        font-weight: 600;
+        border-bottom: 1px solid #D8B256;
+        padding: 12px 18px;
+    }
+
+/* No stripe colors */
+table.dataTable.stripe tbody tr.odd {
+    background: transparent;
+}
+
+/* Remove default dataTable border */
+table.dataTable.no-footer {
+    border-bottom: none;
+}
+
+/* Screen smaller than tablets */
+@media (max-width: 768px) {
+
+    /* Make text smaller */
+    .mini-table {
+        font-size: 0.85rem;
+    }
+
+        .mini-table thead {
+            display: none; /* remove header */
+        }
+
+        .mini-table tbody tr {
+            display: block;
+            margin-bottom: 12px;
+            padding: 12px;
+        }
+
+        .mini-table tbody td {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+            .mini-table tbody td:last-child {
+                border-bottom: none;
+            }
+
+            .mini-table tbody td::before {
+                content: attr(data-label);
+                color: #D8B256;
+                font-weight: 600;
+            }
+}
+

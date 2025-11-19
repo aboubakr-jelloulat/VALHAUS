@@ -65,16 +65,22 @@
                         <!-- Category Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                <i class="bi bi-grid"></i> Category
+                                <i class="bi bi-grid"></i> Categories
                             </a>
                         </li>
 
-                        <!-- Privacy Link -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">  
+                                <i class="bi bi-cart"></i> Products
+                            </a>
+                        </li>
+
+                      @*   <!-- Privacy Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
                                 <i class="bi bi-shield-check"></i> Privacy
                             </a>
-                        </li>
+                        </li> *@
                     </ul>
 
                     <!-- Simple Circular Dark Mode Toggle -->

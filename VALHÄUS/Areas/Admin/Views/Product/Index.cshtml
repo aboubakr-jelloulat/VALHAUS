@@ -1,0 +1,83 @@
+﻿@using Valhaus.Models.Models
+@model List<Product>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-management.css" />
+}
+
+@section Scripts
+{
+    <script src="~/js/product/product.js"></script>
+}
+
+<!-- PAGE HEADER -->
+<div class="header">
+    <div class="header-content">
+        <div class="header-actions-left"></div>
+
+        <div class="header-text-center">
+            <h1>VALHÄUS</h1>
+            <div class="accent-line"><span></span></div>
+            <div class="subtitle">PRODUCT MANAGEMENT</div>
+        </div>
+
+        <div class="header-actions-right">
+            <a asp-controller="Product" asp-action="Upsert" class="btn-valhaus">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Add Product</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-container">
+    <table id="tblData" class="mini-table" style="width:100%">
+        <thead>
+            <tr>
+                <th class="category-name">Title</th>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Brand</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @* Optional fallback if JS disabled *@
+            @if (Model != null && Model.Any())
+            {
+                foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.Title</td>
+                        <td>@p.SKU</td>
+                        <td>@string.Format(System.Globalization.CultureInfo.GetCultureInfo("en-GB"), "{0:C}", p.Price)</td>
+                        <td>@p.Brand</td>
+
+                        <td class="actions-column">
+                            <div class="action-buttons">
+                                <a asp-action="Upsert" asp-route-id="@p.Id" class="btn-action btn-edit" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0)" onclick="Delete('/Product/Delete/@p.Id')" class="btn-action btn-delete" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: .5rem;"></i>
+                        No products found. Click "Add Product" to create one.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

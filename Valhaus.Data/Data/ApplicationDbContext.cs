@@ -40,7 +40,8 @@ namespace Valhaus.Data.Data
                     Price = 449.00,
                     Price50 = 399.00,
                     Price100 = 349.00,
-                    CategoryId = 1
+                    CategoryId = 1,
+                    ImageUrl = ""
                 },
 
                 new Product
@@ -53,7 +54,8 @@ namespace Valhaus.Data.Data
                     Price = 49.99,
                     Price50 = 39.99,
                     Price100 = 29.99,
-                    CategoryId = 2
+                    CategoryId = 2,
+                    ImageUrl = ""
                 },
 
                 new Product
@@ -66,7 +68,8 @@ namespace Valhaus.Data.Data
                     Price = 2999.00,
                     Price50 = 2699.00,
                     Price100 = 2399.00,
-                    CategoryId = 3
+                    CategoryId = 3,
+                    ImageUrl = ""
                 }
             );
         }

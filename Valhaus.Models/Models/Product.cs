@@ -56,7 +56,10 @@ namespace Valhaus.Models.Models
 
         [ForeignKey("CategoryId")]
         public Category Categories { get; set; }
-        
+
+
+        public string ImageUrl { get; set; }
+
     }
 }
 

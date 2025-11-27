@@ -70,9 +70,8 @@ namespace Valhaus.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -100,13 +99,15 @@ namespace Valhaus.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Category = "Tables",
+                            CategoryId = 1,
                             Description = "Low-profile oak coffee table with rounded corners — minimalist Scandinavian design.",
                             ListPrice = 499.0,
                             Price = 449.0,
@@ -118,7 +119,7 @@ namespace Valhaus.Data.Migrations
                         new
                         {
                             Id = 2,
-                            Category = "Tables",
+                            CategoryId = 2,
                             Description = "Hand-glazed ceramic vase in matte white — understated elegance.",
                             ListPrice = 59.990000000000002,
                             Price = 49.990000000000002,
@@ -130,7 +131,7 @@ namespace Valhaus.Data.Migrations
                         new
                         {
                             Id = 3,
-                            Category = "Sofas",
+                            CategoryId = 3,
                             Description = "Corner modular sofa with low profile and wooden base — configurable layout.",
                             ListPrice = 3299.0,
                             Price = 2999.0,
@@ -139,6 +140,17 @@ namespace Valhaus.Data.Migrations
                             SKU = "VH-SF-002",
                             Title = "Nord Modular Sofa - Corner"
                         });
+                });
+
+            modelBuilder.Entity("Valhaus.Models.Models.Product", b =>
+                {
+                    b.HasOne("Valhaus.Models.Category", "Categories")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

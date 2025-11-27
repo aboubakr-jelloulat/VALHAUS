@@ -11,8 +11,8 @@ using Valhaus.Data.Data;
 namespace Valhaus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251117165625_Add Product Table to Data Base")]
-    partial class AddProductTabletoDataBase
+    [Migration("20251127121838_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,9 +73,8 @@ namespace Valhaus.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -103,7 +102,58 @@ namespace Valhaus.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Description = "Low-profile oak coffee table with rounded corners — minimalist Scandinavian design.",
+                            ListPrice = 499.0,
+                            Price = 449.0,
+                            Price100 = 349.0,
+                            Price50 = 399.0,
+                            SKU = "VH-CT-001",
+                            Title = "Oslo Coffee Table"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Description = "Hand-glazed ceramic vase in matte white — understated elegance.",
+                            ListPrice = 59.990000000000002,
+                            Price = 49.990000000000002,
+                            Price100 = 29.989999999999998,
+                            Price50 = 39.990000000000002,
+                            SKU = "VH-VS-001",
+                            Title = "Nordic Ceramic Vase - Small"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 3,
+                            Description = "Corner modular sofa with low profile and wooden base — configurable layout.",
+                            ListPrice = 3299.0,
+                            Price = 2999.0,
+                            Price100 = 2399.0,
+                            Price50 = 2699.0,
+                            SKU = "VH-SF-002",
+                            Title = "Nord Modular Sofa - Corner"
+                        });
+                });
+
+            modelBuilder.Entity("Valhaus.Models.Models.Product", b =>
+                {
+                    b.HasOne("Valhaus.Models.Category", "Categories")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

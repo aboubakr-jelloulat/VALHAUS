@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="~/css/Category/category-management.css?v=1.0.1" />
 }
 
+  @*   ?v=1.0.2
+        ?v=1.0.3
+
+    This forces the browser to load the new version every time. *@
+
 @section Scripts
 {
     <script src="~/js/product/product.js"></script>
@@ -52,9 +57,10 @@
                     <tr>
                         <td>@p.Title</td>
                         <td>@p.SKU</td>
-                       <td>@string.Format(
+                       @* <td>@string.Format(
                             System.Globalization.CultureInfo.GetCultureInfo("nb-NO"), "{0:C}", p.Price)</td>
-                        <td>@p.Category </td>
+                        <td>@p.Category </td> *@
+                        <td>   Hej </td>
 
                         <td class="actions-column">
                             <div class="action-buttons">

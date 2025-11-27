@@ -36,11 +36,11 @@ namespace Valhaus.Data.Data
                     Title = "Oslo Coffee Table",
                     Description = "Low-profile oak coffee table with rounded corners — minimalist Scandinavian design.",
                     SKU = "VH-CT-001",
-                    Category = "Tables",
                     ListPrice = 499.00,
                     Price = 449.00,
                     Price50 = 399.00,
-                    Price100 = 349.00
+                    Price100 = 349.00,
+                    CategoryId = 1
                 },
 
                 new Product
@@ -49,11 +49,11 @@ namespace Valhaus.Data.Data
                     Title = "Nordic Ceramic Vase - Small",
                     Description = "Hand-glazed ceramic vase in matte white — understated elegance.",
                     SKU = "VH-VS-001",
-                    Category = "Tables",
                     ListPrice = 59.99,
                     Price = 49.99,
                     Price50 = 39.99,
-                    Price100 = 29.99
+                    Price100 = 29.99,
+                    CategoryId = 2
                 },
 
                 new Product
@@ -62,11 +62,11 @@ namespace Valhaus.Data.Data
                     Title = "Nord Modular Sofa - Corner",
                     Description = "Corner modular sofa with low profile and wooden base — configurable layout.",
                     SKU = "VH-SF-002",
-                    Category = "Sofas",
                     ListPrice = 3299.00,
                     Price = 2999.00,
                     Price50 = 2699.00,
-                    Price100 = 2399.00
+                    Price100 = 2399.00,
+                    CategoryId = 3
                 }
             );
         }

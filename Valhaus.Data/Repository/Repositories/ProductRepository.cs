@@ -28,7 +28,7 @@ namespace Valhaus.Data.Repository.Repositories
             db_product.Title        = product.Title;
             db_product.Description  = product.Description;
             db_product.SKU          = product.SKU;
-            db_product.Category     = product.Category;
+            db_product.CategoryId   = product.CategoryId;
             db_product.ListPrice    = product.ListPrice;
             db_product.Price        = product.Price;
             db_product.Price50      = product.Price50;

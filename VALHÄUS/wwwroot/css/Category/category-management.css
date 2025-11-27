@@ -60,10 +60,10 @@ body
         margin-top: 10px;
 }
 
-/*  Table Container  */
+/*  Table Container -> Change the table size */
 .table-container 
 {
-    max-width: 750px;
+    max-width: 1000px; /* increased from 750px */
     margin: 60px auto;
     padding: 25px;
     background: #ffffff;
@@ -71,6 +71,7 @@ body
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     border: 1px solid #eee6d8;
 }
+
 
 /*  Table Core  */
 .mini-table 

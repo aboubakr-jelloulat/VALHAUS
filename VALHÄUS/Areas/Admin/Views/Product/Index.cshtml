@@ -3,7 +3,7 @@
 
 @section Styles
 {
-    <link rel="stylesheet" href="~/css/Category/category-management.css" />
+    <link rel="stylesheet" href="~/css/Category/category-management.css?v=1.0.1" />
 }
 
 @section Scripts
@@ -23,7 +23,7 @@
         </div>
 
         <div class="header-actions-right">
-            <a asp-controller="Product" asp-action="Upsert" class="btn-valhaus">
+            <a asp-controller="Product" asp-action="Create" class="btn-valhaus">
                 <i class="bi bi-plus-circle-fill"></i>
                 <span>Add Product</span>
             </a>
@@ -39,13 +39,12 @@
                 <th class="category-name">Title</th>
                 <th>SKU</th>
                 <th>Price</th>
-                <th>Brand</th>
+                <th>Category</th>
                 <th class="actions-column">Actions</th>
             </tr>
         </thead>
 
         <tbody>
-            @* Optional fallback if JS disabled *@
             @if (Model != null && Model.Any())
             {
                 foreach (var p in Model)
@@ -53,15 +52,25 @@
                     <tr>
                         <td>@p.Title</td>
                         <td>@p.SKU</td>
-                        <td>@string.Format(System.Globalization.CultureInfo.GetCultureInfo("en-GB"), "{0:C}", p.Price)</td>
-                        <td>@p.Brand</td>
+                       <td>@string.Format(
+                            System.Globalization.CultureInfo.GetCultureInfo("nb-NO"), "{0:C}", p.Price)</td>
+                        <td>@p.Category </td>
 
                         <td class="actions-column">
                             <div class="action-buttons">
-                                <a asp-action="Upsert" asp-route-id="@p.Id" class="btn-action btn-edit" title="Edit">
+                                <!-- EDIT -->
+                                <a asp-action="Edit"
+                                   asp-route-id="@p.Id"
+                                   class="btn-action btn-edit"
+                                   title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="javascript:void(0)" onclick="Delete('/Product/Delete/@p.Id')" class="btn-action btn-delete" title="Delete">
+
+                                <!-- DELETE (OPEN DELETE CONFIRMATION PAGE) -->
+                                <a asp-action="Delete"
+                                   asp-route-id="@p.Id"
+                                   class="btn-action btn-delete"
+                                   title="Delete">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>

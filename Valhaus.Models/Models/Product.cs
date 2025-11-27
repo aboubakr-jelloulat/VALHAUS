@@ -15,6 +15,10 @@ namespace Valhaus.Models.Models
         [Required]
         public string Title { get; set; }
 
+        [Required]
+        public string Category { get; set; }
+
+        [Required]
         public string Description { get; set; }
 
         [Required]
@@ -25,12 +29,6 @@ namespace Valhaus.Models.Models
           
          */
 
-        
-        public string Brand { get; set; }
-        /*
-            The product manufacturer or brand name  "Muuto", "IKEA", "OwnLabel"
-         
-         */
 
         [Required]
         [Display(Name = "List Price")]

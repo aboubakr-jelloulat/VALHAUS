@@ -32,17 +32,17 @@ namespace Valhaus.Models.Models
 
         [Required]
         [Display(Name = "List Price")]
-        [Range(0.01, 100000)]
+        [Range(1, 100000)]
         public double ListPrice { get; set; }
 
         [Required]
         [Display(Name = "Price for 1-50")]
-        [Range(0.01, 100000)]
+        [Range(1, 100000)]
         public double Price { get; set; }
 
         [Required]
         [Display(Name = "Price for 50+")]
-        [Range(0.01, 100000)]
+        [Range(1, 100000)]
         public double Price50 { get; set; }
 
         [Required]
@@ -50,7 +50,7 @@ namespace Valhaus.Models.Models
         /*
          * Display Purpose: controls the human-friendly label/name that UI helpers and validation messages use for this property.
          */
-        [Range(0.01, 100000)]
+        [Range(1, 100000)]
         public double Price100 { get; set; }
 
         public int CategoryId { get; set; }

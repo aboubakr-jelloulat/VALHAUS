@@ -1,4 +1,4 @@
-﻿@using Valhaus.Models.Models
+﻿﻿@using Valhaus.Models.Models
 
 @model ProductVM
 
@@ -28,7 +28,7 @@
         This form may contain files, so send the data in multiple parts instead of one block *@
 
 <div class="form-container">
-    <form asp-controller="Product" asp-action="Upsert" method="post" class="product-form" enctype="multipart/form-data">
+    <form method="post" action="/Admin/Product/Upsert" class="row" enctype="multipart/form-data">
         <input asp-for="Product.Id" hidden />
 
         <!-- Title -->
@@ -149,16 +149,18 @@
 
         </div>
 
+       
         <!-- Image -->
         <div class="form-group">
-            <label class="form-label">
+            <label asp-for="Product.ImageUrl" class="form-label">
                 <i class="bi bi-image"></i> Image
             </label>
 
-            <input type="file" name="file" class="form-control" />
+            <input type="file" name="file" class="form-input" />
         </div>
 
-       
+
+
 
         <!-- Action Buttons -->
         <div class="form-actions">

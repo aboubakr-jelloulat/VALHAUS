@@ -86,6 +86,7 @@ namespace VALHÄUS.Areas.Admin.Controllers
             }
             else
             {
+                // update
                 productVM.Product = _unitOfWork.Products.Get(u => u.Id == id);
 
                 return View(productVM);
@@ -96,31 +97,66 @@ namespace VALHÄUS.Areas.Admin.Controllers
 
 
         [HttpPost]
+        [RequestSizeLimit(104857600)]
         public ActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
+            
+            
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
-                if (file is not null)
-                {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // png jpg
-                    string ProductName = Path.Combine(wwwRootPath, @"images\product");
+                
 
-                    using (var fileStream = new FileStream(Path.Combine(ProductName, fileName), FileMode.Create))
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string uploadPath = Path.Combine(wwwRootPath, @"images/product");
+
+                    // CREATE DIRECTORY IF IT DOES NOT EXIST
+                    if (!Directory.Exists(uploadPath))
                     {
-                        file.CopyTo(fileStream); // copy the content pixels and metadata 
+                        Directory.CreateDirectory(uploadPath);
                     }
 
-                    productVM.Product.ImageUrl = @"images\product\" + fileName;
+                    // DELETE OLD IMAGE IF NEEDED
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        
+                        var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\', '/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    // SAVE NEW FILE
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    productVM.Product.ImageUrl = @"images/product/" + fileName;
                 }
 
-                _unitOfWork.Products.Add(productVM.Product);
+
+                // CREATE
+                if (productVM.Product.Id == 0)
+                {
+                    _unitOfWork.Products.Add(productVM.Product);
+                    TempData["success"] = "Product created successfully!";
+                }
+                else
+                {
+                    // UPDATE
+                    _unitOfWork.Products.Update(productVM.Product);
+                    TempData["success"] = "Product updated successfully!";
+                }
+
                 _unitOfWork.Save();
-                TempData["success"] = "product created successfully!";
                 return RedirectToAction("Index");
             }
 
-            // If ModelState is invalid, repopulate CategoryList
+            // Reload categories on error
             productVM.CategoryList = _unitOfWork.Categories.GetAll()
                 .Select(c => new SelectListItem
                 {
@@ -130,6 +166,7 @@ namespace VALHÄUS.Areas.Admin.Controllers
 
             return View(productVM);
         }
+
 
 
 

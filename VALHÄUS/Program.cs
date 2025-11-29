@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Valhaus.Data.Data;
@@ -7,6 +8,11 @@ using VALHÄUS.Areas.Customer.Controllers;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 104857600;
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

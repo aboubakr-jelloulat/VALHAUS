@@ -1,65 +1,87 @@
 ﻿@using Valhaus.Models.Models
-@model Product
+
+@model ProductVM
 
 @section Styles
 {
     <link rel="stylesheet" href="~/css/Category/category-form.css" />
 }
 
+@* Define a local variable to improve Create/Update logic *@
+@{
+    bool isUpdate = Model.Product.Id != 0;
+}
+
 <!-- Header Section -->
 <div class="form-header">
     <h1>VALHÄUS</h1>
     <div class="accent-line"><span></span></div>
-    <h2 class="form-title">Edit Product</h2>
-    <p class="form-subtitle">Update product details</p>
+    <h2 class="form-title">@((isUpdate ? "Update" : "Create") + " Product")</h2>
+    <p class="form-subtitle">
+        @(isUpdate ? "Update existing product details" : "Add a new product to your collection")
+    </p>
 </div>
 
 <!-- Form Container -->
-<div class="form-container">
-    <form asp-controller="Product" asp-action="Edit" method="post" class="product-form">
+@* enctype="multipart/form-data"
+    It tells the browser:
+        This form may contain files, so send the data in multiple parts instead of one block *@
 
-        <!-- Keep the Id Hidden -->
-        <input type="hidden" asp-for="Id" />
+<div class="form-container">
+    <form asp-controller="Product" asp-action="Create" method="post" class="product-form" enctype="multipart/form-data">
+        <input asp-for="Product.Id" hidden />
 
         <!-- Title -->
         <div class="form-group">
-            <label asp-for="Title" class="form-label">
+            <label asp-for="Product.Title" class="form-label">
                 <i class="bi bi-bag"></i>
                 Product Title
             </label>
-            <input asp-for="Title"
+            <input asp-for="Product.Title"
                    type="text"
                    class="form-input"
-                   placeholder="Modern Scandinavian Chair"
                    required />
-            <span asp-validation-for="Title" class="text-danger"></span>
+            <span asp-validation-for="Product.Title" class="text-danger"></span>
         </div>
 
         <!-- SKU -->
         <div class="form-group">
-            <label asp-for="SKU" class="form-label">
+            <label asp-for="Product.SKU" class="form-label">
                 <i class="bi bi-upc-scan"></i>
                 SKU
             </label>
-            <input asp-for="SKU"
+            <input asp-for="Product.SKU"
                    type="text"
                    class="form-input"
                    required />
-            <span asp-validation-for="SKU" class="text-danger"></span>
+            <span asp-validation-for="Product.SKU" class="text-danger"></span>
         </div>
-
-       
 
         <!-- Description -->
         <div class="form-group">
-            <label asp-for="Description" class="form-label">
+            <label asp-for="Product.Description" class="form-label">
                 <i class="bi bi-text-left"></i>
                 Description
             </label>
-            <textarea asp-for="Description"
+            <textarea asp-for="Product.Description"
                       class="form-input"
                       placeholder="Short description of the product..."></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
+            <span asp-validation-for="Product.Description" class="text-danger"></span>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label asp-for="Product.CategoryId" class="form-label">
+                <i class="bi bi-tags"></i>
+                Category
+            </label>
+            <select asp-for="Product.CategoryId"
+                    asp-items="Model.CategoryList"
+                    type="text"
+                    class="form-input">
+                <option disabled selected>Select Category</option>
+            </select>
+            <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
         </div>
 
         <!-- Pricing Section -->
@@ -67,76 +89,90 @@
 
             <!-- List Price -->
             <div class="form-group">
-                <label asp-for="ListPrice" class="form-label">
+                <label asp-for="Product.ListPrice" class="form-label">
                     <i class="bi bi-cash"></i>
                     List Price
                 </label>
-                <input asp-for="ListPrice"
+                <input asp-for="Product.ListPrice"
                        type="number"
                        step="0.01"
                        min="0.01"
                        class="form-input"
                        required />
-                <span asp-validation-for="ListPrice" class="text-danger"></span>
+                <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
             </div>
 
             <!-- Price -->
             <div class="form-group">
-                <label asp-for="Price" class="form-label">
+                <label asp-for="Product.Price" class="form-label">
                     <i class="bi bi-currency-dollar"></i>
                     Price (1 - 50)
                 </label>
-                <input asp-for="Price"
+                <input asp-for="Product.Price"
                        type="number"
                        step="0.01"
                        min="0.01"
                        class="form-input"
                        required />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
             </div>
 
             <!-- Price 50+ -->
             <div class="form-group">
-                <label asp-for="Price50" class="form-label">
+                <label asp-for="Product.Price50" class="form-label">
                     <i class="bi bi-currency-exchange"></i>
                     Price (50+)
                 </label>
-                <input asp-for="Price50"
+                <input asp-for="Product.Price50"
                        type="number"
                        step="0.01"
                        min="0.01"
                        class="form-input"
                        required />
-                <span asp-validation-for="Price50" class="text-danger"></span>
+                <span asp-validation-for="Product.Price50" class="text-danger"></span>
             </div>
 
             <!-- Price 100+ -->
             <div class="form-group">
-                <label asp-for="Price100" class="form-label">
+                <label asp-for="Product.Price100" class="form-label">
                     <i class="bi bi-piggy-bank"></i>
                     Price (100+)
                 </label>
-                <input asp-for="Price100"
+                <input asp-for="Product.Price100"
                        type="number"
                        step="0.01"
                        min="0.01"
                        class="form-input"
                        required />
-                <span asp-validation-for="Price100" class="text-danger"></span>
+                <span asp-validation-for="Product.Price100" class="text-danger"></span>
             </div>
 
         </div>
 
+        <!-- Image -->
+        <div class="form-group">
+            <label asp-for="Product.ImageUrl" class="form-label">
+                <i class="bi bi-image"></i> Image
+            </label>
+
+            <input asp-for="Product.ImageUrl" type="file" class="form-control" />
+
+            <!-- No validation -->
+        </div>
+
         <!-- Action Buttons -->
         <div class="form-actions">
+
             <button type="submit" class="btn-submit">
                 <i class="bi bi-check-circle"></i>
-                Save Changes
+                @(isUpdate ? "Update Product" : "Create Product")
             </button>
+
             <a asp-controller="Product" asp-action="Index" class="btn-cancel">
                 <i class="bi bi-x-circle"></i>
                 Cancel
             </a>
+
         </div>
 
     </form>

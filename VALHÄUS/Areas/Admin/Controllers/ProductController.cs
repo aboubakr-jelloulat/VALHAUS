@@ -95,89 +95,28 @@ namespace VALHÄUS.Areas.Admin.Controllers
 
 
 
-        //[HttpPost]
-        //public ActionResult Upsert(ProductVM productVM, IFormFile file)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        string wwwRootPath = _webHostEnvironment.WebRootPath;
-        //        if (file is not null)
-        //        {
-        //            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // png jpg
-        //            string ProductName = Path.Combine(wwwRootPath, @"images\product");
-
-        //            using (var fileStream = new FileStream(Path.Combine(ProductName, fileName), FileMode.Create))
-        //            {
-        //                file.CopyTo(fileStream); // copy the content pixels and metadata 
-        //            }
-
-        //            productVM.Product.ImageUrl = @"images\product\" + fileName;
-        //        }
-
-        //        _unitOfWork.Products.Add(productVM.Product);
-        //        _unitOfWork.Save();
-        //        TempData["success"] = "product created successfully!";
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    // If ModelState is invalid, repopulate CategoryList
-        //    productVM.CategoryList = _unitOfWork.Categories.GetAll()
-        //        .Select(c => new SelectListItem
-        //        {
-        //            Text = c.Name,
-        //            Value = c.Id.ToString()
-        //        });
-
-        //    return View(productVM);
-        //}
-
         [HttpPost]
-        public ActionResult Upsert(ProductVM productVM, IFormFile file)
+        public ActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
-            // Check ModelState
             if (ModelState.IsValid)
             {
-                // Get wwwroot path
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
-
-                // Handle file upload if a file is selected
-                if (file != null)
+                if (file is not null)
                 {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // unique file name
-                    string uploadPath = Path.Combine(wwwRootPath, "images", "product");
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // png jpg
+                    string ProductName = Path.Combine(wwwRootPath, @"images\product");
 
-                    // Ensure folder exists
-                    if (!Directory.Exists(uploadPath))
+                    using (var fileStream = new FileStream(Path.Combine(ProductName, fileName), FileMode.Create))
                     {
-                        Directory.CreateDirectory(uploadPath);
+                        file.CopyTo(fileStream); // copy the content pixels and metadata 
                     }
 
-                    // Copy file to wwwroot/images/product
-                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream); // copy the content pixels and metadata
-                    }
-
-                    // Save relative path to DB
                     productVM.Product.ImageUrl = @"images\product\" + fileName;
                 }
 
-                // Handle Create or Update
-                if (productVM.Product.Id == 0)
-                {
-                    // Create new product
-                    _unitOfWork.Products.Add(productVM.Product);
-                    TempData["success"] = "Product created successfully!";
-                }
-                else
-                {
-                    // Update existing product
-                    _unitOfWork.Products.Update(productVM.Product);
-                    TempData["success"] = "Product updated successfully!";
-                }
-
+                _unitOfWork.Products.Add(productVM.Product);
                 _unitOfWork.Save();
-
+                TempData["success"] = "product created successfully!";
                 return RedirectToAction("Index");
             }
 
@@ -191,7 +130,6 @@ namespace VALHÄUS.Areas.Admin.Controllers
 
             return View(productVM);
         }
-
 
 
 

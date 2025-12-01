@@ -36,7 +36,10 @@ namespace VALHÄUS.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            List<Product> products = _unitOfWork.Products.GetAll().ToList();
+            List<Product> products = _unitOfWork.Products.GetAll(includeProperties: "Categories").ToList();
+
+            // Uses includeProperties: "Categories" to fetch related categories.
+            //Tell EF When fetching products also fetch the related categories.
 
             return View(products);
         }
@@ -118,10 +121,10 @@ namespace VALHÄUS.Areas.Admin.Controllers
                         Directory.CreateDirectory(uploadPath);
                     }
 
-                    // DELETE OLD IMAGE IF NEEDED
+                    // DELETE OLD IMAGE 
                     if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
-                        
+
                         var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\', '/'));
                         if (System.IO.File.Exists(oldImagePath))
                         {
@@ -135,7 +138,7 @@ namespace VALHÄUS.Areas.Admin.Controllers
                         file.CopyTo(fileStream);
                     }
 
-                    productVM.Product.ImageUrl = @"images/product/" + fileName;
+                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
                 }
 
 

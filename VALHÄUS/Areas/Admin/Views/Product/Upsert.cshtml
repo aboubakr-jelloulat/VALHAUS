@@ -159,6 +159,7 @@
                     <label asp-for="Product.ImageUrl" class="form-label">
                         <i class="bi bi-image"></i> Image
                     </label>
+                    
 
                     <!-- IMAGE PREVIEW FIRST -->
                     @if (Model.Product.ImageUrl != null)
@@ -167,7 +168,7 @@
                             <img src="@Model.Product.ImageUrl" alt="Product preview" />
                         </div>
                     }
-
+                    
                     <!-- THEN FILE INPUT -->
                     <input type="file" name="file" class="form-input" />
                 </div>

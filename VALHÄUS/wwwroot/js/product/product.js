@@ -1,71 +1,83 @@
-﻿$(document).ready(function () {
+﻿var dataTable;
 
-    $('#tblData').DataTable({
+$(document).ready(function () {
+    loadDataTable();
+
+    // Event delegation for delete buttons
+    $('#tblData').on('click', '.btn-delete', function () {
+        var id = $(this).data('id'); // get product id
+        Delete('/Admin/Product/Delete/' + id);
+    });
+});
+
+function loadDataTable() {
+    dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Product/GetAll",
+            "url": "/Admin/Product/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "title", "width": "30%" },
-            { "data": "sku", "width": "15%" },
+            { data: "title", width: "20%" },
+            { data: "sku", width: "15%" },
             {
-                "data": "price",
-                "width": "15%",
-                "render": function (data) {
-                    if (!data) return "";
-                    return new Intl.NumberFormat('en-GB', {
-                        style: 'currency', currency: 'EUR'
-                    }).format(data);
+                data: "price",
+                width: "10%",
+                render: function (value) {
+                    return new Intl.NumberFormat("nb-NO", {
+                        style: "currency",
+                        currency: "NOK"
+                    }).format(value);
                 }
             },
-            { "data": "brand", "width": "20%" },
+            { data: "categories.name", width: "20%" },
+
             {
-                "data": "id",
-                "width": "20%",
-                "orderable": false,
-                "render": function (data) {
+                data: "id",
+                width: "20%",
+                render: function (id) {
                     return `
                         <div class="action-buttons">
-                            <a href="/Product/Upsert/${data}" class="btn-action btn-edit" title="Edit">
+                            <a href="/Admin/Product/Upsert?id=${id}"
+                               class="btn-action btn-edit"
+                               title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="javascript:void(0)" onclick="Delete('/Product/Delete/${data}')" 
-                               class="btn-action btn-delete" title="Delete">
-                               <i class="bi bi-trash"></i>
-                            </a>
-                        </div>`;
+
+                            <button data-id="${id}" class="btn-action btn-delete" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
                 }
             }
-        ],
-        "language": {
-            "emptyTable": "No products available"
-        },
-        "stripeClasses": []
+        ]
     });
-});
+}
 
-
+// Delete function using SweetAlert and AJAX
 function Delete(url) {
-    if (!confirm("Are you sure you want to delete this product?")) return;
-
-    fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function (data) {
+                    dataTable.ajax.reload(); // reload table
+                    toastr.success(data.message);
+                },
+                error: function () {
+                    toastr.error('An error occurred while deleting the product');
+                }
+            });
         }
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (data && data.success) {
-                $('#tblData').DataTable().ajax.reload();
-                alert(data.message || "Deleted successfully");
-            } else {
-                alert(data ? data.message : "Delete failed");
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("There was an error deleting the product");
-        });
+    });
 }

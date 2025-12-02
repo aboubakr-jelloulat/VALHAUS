@@ -47,7 +47,7 @@ namespace Valhaus.Data.Repository.Repositories
                 foreach (var includeProp in includeProperties
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(includeProp);
+                    query = query.Include(includeProp); // Include navigation properties
                 }
             }
 
@@ -63,7 +63,7 @@ namespace Valhaus.Data.Repository.Repositories
                 foreach (var includeProp in includeProperties
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(includeProp);
+                    query = query.Include(includeProp); // Include navigation properties
                 }
             }
 

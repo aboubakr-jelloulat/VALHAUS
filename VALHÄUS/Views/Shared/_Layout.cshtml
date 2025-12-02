@@ -23,10 +23,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VALHÄUS.styles.css" asp-append-version="true" />
 
-    @* == Nofification Messages == *@
-
+    @* == Notification Messages == *@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
+    @* ======== DataTables API (SINGLE VERSION ONLY) ======= *@
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
     <!-- ===== Page-Specific Styles ===== -->
     @RenderSection("Styles", required: false)
@@ -70,17 +71,10 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">  
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">
                                 <i class="bi bi-cart"></i> Products
                             </a>
                         </li>
-
-                      @*   <!-- Privacy Link -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
-                                <i class="bi bi-shield-check"></i> Privacy
-                            </a>
-                        </li> *@
                     </ul>
 
                     <!-- Simple Circular Dark Mode Toggle -->
@@ -102,39 +96,41 @@
         </main>
     </div>
 
-
     <!-- ===== Footer ===== -->
     <footer class="border-top footer text-muted mt-4 py-2">
         <div class="container text-center">
             <p class="mb-0 small">
                 &copy; @DateTime.Now.Year <strong>VALHÄUS</strong>
-                @* <span class="mx-2">|</span> *@
-                @* <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Privacy</a> *@
-                @* maybe i add my gihub link or contact ... *@
             </p>
         </div>
     </footer>
 
-    <!-- ===== Scripts ===== -->
-    <!-- jQuery -->
+    <!-- ===== Scripts (IN CORRECT ORDER) ===== -->
+    <!-- 1. jQuery FIRST (ONLY ONCE) -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-    <!-- Bootstrap JS -->
+    <!-- 2. Bootstrap JS -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Nimbus Theme JS -->
+    <!-- 3. Nimbus Theme JS -->
     <script src="~/js/nimbus/bootstrap.bundle.min.js"></script>
     <script src="~/js/nimbus/vendors/aos.js"></script>
     <script src="~/js/nimbus/custom.js"></script>
 
-    <!-- Dark Mode Toggle (NEW Simple Style) -->
+    <!-- 4. Dark Mode Toggle -->
     <script src="~/js/DarkMode/dark-mode-toggle.js"></script>
 
-    <!-- Site JS -->
+    <!-- 5. Site JS -->
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Page-Specific Scripts -->
+    <!-- 6. DataTables (SINGLE VERSION - After jQuery) -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    @* SweetAlert *@
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- 7. Page-Specific Scripts (Your product.js will load here) -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-

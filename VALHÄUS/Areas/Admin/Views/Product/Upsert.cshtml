@@ -168,6 +168,7 @@
                             <img src="@Model.Product.ImageUrl" alt="Product preview" />
                         </div>
                     }
+                    <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
                     
                     <!-- THEN FILE INPUT -->
                     <input type="file" name="file" class="form-input" />

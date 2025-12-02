@@ -60,7 +60,7 @@ namespace Valhaus.Models.Models
         public Category Categories { get; set; }
 
         [ValidateNever]
-        //[Required]
+        [Required]
         public string? ImageUrl { get; set; }
 
     }

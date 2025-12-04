@@ -1,0 +1,323 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<style>
+    /* Luxury Authentication Menu Styles */
+    .auth-menu {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Premium Login/Register Links */
+    .auth-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        color: #d4af37;
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+    }
+
+    .auth-link:hover {
+        background: linear-gradient(135deg, #d4af37 0%, #b8945f 100%);
+        color: #1a1a1a;
+        border-color: #d4af37;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .auth-link i {
+        font-size: 1.1rem;
+    }
+
+    /* User Profile Dropdown */
+    .user-profile-dropdown {
+        position: relative;
+    }
+
+    .user-profile-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        color: #d4af37;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .user-profile-btn:hover {
+        background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+        border-color: #d4af37;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #d4af37 0%, #b8945f 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #1a1a1a;
+        font-weight: 700;
+    }
+
+    .user-name {
+        color: #fff;
+        font-size: 0.9rem;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dropdown-arrow {
+        font-size: 0.7rem;
+        transition: transform 0.3s ease;
+    }
+
+    .user-profile-dropdown.show .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    /* Premium Dropdown Menu */
+    .auth-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        min-width: 240px;
+        background: #1a1a1a;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .user-profile-dropdown.show .auth-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-header {
+        padding: 1rem;
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .dropdown-user-email {
+        color: #d4af37;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .dropdown-user-role {
+        color: #888;
+        font-size: 0.75rem;
+        margin: 0.2rem 0 0 0;
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: rgba(212, 175, 55, 0.1);
+        margin: 0;
+    }
+
+    .auth-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.8rem 1rem;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .auth-dropdown-item:hover {
+        background: rgba(212, 175, 55, 0.1);
+        color: #d4af37;
+    }
+
+    .auth-dropdown-item i {
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+        color: #d4af37;
+    }
+
+    .logout-btn {
+        border-top: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .logout-btn:hover {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    .logout-btn i {
+        color: #dc3545;
+    }
+
+    /* Dark Mode Support */
+    html[data-bs-theme="light"] .auth-link {
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        color: #2a2a2a;
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    html[data-bs-theme="light"] .auth-link:hover {
+        background: linear-gradient(135deg, #d4af37 0%, #b8945f 100%);
+        color: #fff;
+    }
+
+    html[data-bs-theme="light"] .user-profile-btn {
+        background: #fff;
+        color: #2a2a2a;
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    html[data-bs-theme="light"] .user-profile-btn:hover {
+        background: #f5f5f5;
+        border-color: #d4af37;
+    }
+
+    html[data-bs-theme="light"] .user-name {
+        color: #2a2a2a;
+    }
+
+    html[data-bs-theme="light"] .auth-dropdown-menu {
+        background: #fff;
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    html[data-bs-theme="light"] .dropdown-header {
+        background: #f5f5f5;
+        border-bottom-color: rgba(0, 0, 0, 0.1);
+    }
+
+    html[data-bs-theme="light"] .auth-dropdown-item {
+        color: #2a2a2a;
+    }
+
+    html[data-bs-theme="light"] .auth-dropdown-item:hover {
+        background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .user-name {
+            display: none;
+        }
+        
+        .auth-dropdown-menu {
+            right: -10px;
+        }
+    }
+</style>
+
+<ul class="navbar-nav auth-menu">
+@if (SignInManager.IsSignedIn(User))
+{
+    <!-- Authenticated User - Profile Dropdown -->
+    <li class="nav-item user-profile-dropdown">
+        <button class="user-profile-btn" type="button" onclick="toggleUserDropdown()">
+            <div class="user-avatar">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <span class="user-name">@User.Identity?.Name</span>
+            <i class="bi bi-chevron-down dropdown-arrow"></i>
+        </button>
+        
+        <div class="auth-dropdown-menu">
+            <div class="dropdown-header">
+                <p class="dropdown-user-email">@User.Identity?.Name</p>
+                <p class="dropdown-user-role">Premium Member</p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="auth-dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                <i class="bi bi-person-gear"></i>
+                <span>My Account</span>
+            </a>
+            <a class="auth-dropdown-item" href="#">
+                <i class="bi bi-bag-check"></i>
+                <span>Orders</span>
+            </a>
+            <a class="auth-dropdown-item" href="#">
+                <i class="bi bi-heart"></i>
+                <span>Wishlist</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <form class="m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "Customer" })">
+                <button type="submit" class="auth-dropdown-item logout-btn">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+    </li>
+}
+else
+{
+    <!-- Guest User - Login/Register Links -->
+    <li class="nav-item">
+        <a class="auth-link" asp-area="Identity" asp-page="/Account/Register">
+            <i class="bi bi-person-plus"></i>
+            <span>Register</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="auth-link" asp-area="Identity" asp-page="/Account/Login">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span>Login</span>
+        </a>
+    </li>
+}
+</ul>
+
+<script>
+    function toggleUserDropdown() {
+        const dropdown = document.querySelector('.user-profile-dropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.querySelector('.user-profile-dropdown');
+        if (dropdown && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Prevent dropdown from closing when clicking inside
+    document.querySelector('.auth-dropdown-menu')?.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+</script>

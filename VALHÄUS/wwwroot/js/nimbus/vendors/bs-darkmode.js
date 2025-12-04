@@ -3,7 +3,7 @@
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>@ViewData["Title"] - VALHÄUS</title>
+            <title>@ViewData["Title"] - VALHAUS</title>
 
             <!-- Bootstrap (existing) -->
             <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -18,7 +18,7 @@
 
                 <!-- Custom site CSS -->
                 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-                <link rel="stylesheet" href="~/VALHÄUS.styles.css" asp-append-version="true" />
+                <link rel="stylesheet" href="~/VALHAUS.styles.css" asp-append-version="true" />
 
                 <!-- Dark Mode Toggle Styles -->
                 <style>
@@ -147,7 +147,7 @@
             <header>
                 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                     <div class="container-fluid">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VALHÄUS</a>
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VALHAUS</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -190,7 +190,7 @@
 
             <footer class="border-top footer text-muted">
                 <div class="container">
-                    &copy; 2025 - VALHÄUS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    &copy; 2025 - VALHAUS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
             </footer>
 

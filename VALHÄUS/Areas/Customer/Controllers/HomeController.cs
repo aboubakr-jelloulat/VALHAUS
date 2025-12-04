@@ -4,7 +4,7 @@ using Valhaus.Data.Repository.IRepository;
 using Valhaus.Models;
 using Valhaus.Models.Models;
 
-namespace VALHÄUS.Areas.Customer.Controllers
+namespace VALHAUS.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller

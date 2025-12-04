@@ -1,5 +1,5 @@
 ﻿/**
- * VALHÄUS Simple Dark Mode Toggle
+ * VALHAUS Simple Dark Mode Toggle
  * Circular Button with Icon Change
  * Author: codew4re
  * Date: 2025-11-06

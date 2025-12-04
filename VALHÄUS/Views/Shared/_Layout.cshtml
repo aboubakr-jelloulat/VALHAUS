@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VALHÄUS</title>
+    <title>@ViewData["Title"] - VALHAUS</title>
 
     <!-- ===== Core Styles ===== -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -21,7 +21,7 @@
 
     <!-- ===== Custom Site Styles ===== -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VALHÄUS.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/VALHAUS.styles.css" asp-append-version="true" />
 
     @* == Notification Messages == *@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
@@ -37,10 +37,10 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <!-- Brand Logo -->
+                @* <!-- Brand Logo -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <strong>VALHÄUS</strong>
-                </a>
+                    <strong>VALHAUS</strong>
+                </a> *@
 
                 <!-- Mobile Menu Toggle -->
                 <button class="navbar-toggler"
@@ -55,7 +55,7 @@
 
                 <!-- Navigation Menu -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav me-auto">
                         <!-- Home Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Index">
@@ -76,6 +76,7 @@
                             </a>
                         </li>
                     </ul>
+                    <partial name="_LoginPartial">
 
                     <!-- Simple Circular Dark Mode Toggle -->
                     <div class="d-flex align-items-center">
@@ -100,7 +101,7 @@
     <footer class="border-top footer text-muted mt-4 py-2">
         <div class="container text-center">
             <p class="mb-0 small">
-                &copy; @DateTime.Now.Year <strong>VALHÄUS</strong>
+                &copy; @DateTime.Now.Year <strong>VALHAUS</strong>
             </p>
         </div>
     </footer>

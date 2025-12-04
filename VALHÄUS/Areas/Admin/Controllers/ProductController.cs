@@ -13,7 +13,7 @@ using Valhaus.Data.Repository.Repositories;
 using Valhaus.Models;
 using Valhaus.Models.Models;
 using Valhaus.Models.ViewModels;
-namespace VALHÄUS.Areas.Admin.Controllers
+namespace VALHAUS.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductController : Controller

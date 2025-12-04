@@ -4,7 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
-using VALHÄUS.Areas.Customer.Controllers;
+using VALHAUS.Areas.Customer.Controllers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,8 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options
     .UseSqlServer(builder.Configuration.GetConnectionString("constr")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Valhaus.Models;
 using Valhaus.Models.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace Valhaus.Data.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -21,6 +23,10 @@ namespace Valhaus.Data.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // ignore identity 
+            base.OnModelCreating(modelBuilder);
+
+
             modelBuilder.Entity<Category>().HasData
                 (
                     new Category { Id = 1, Name = "Tables", DisplayOrder = 1 },

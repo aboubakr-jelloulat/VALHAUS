@@ -1,0 +1,482 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<script src="~/js/DarkMode/dark-mode-toggle.js"></script>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Dynamic Background */
+    .details-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(26,22,20,0.85) 0%, rgba(44,36,24,0.9) 100%),
+                    url('https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1920&h=1080&fit=crop') center/cover fixed;
+        padding: 2rem 1rem;
+    }
+
+    html[data-bs-theme="light"] .details-wrapper {
+        background: linear-gradient(135deg, rgba(248,245,240,0.95) 0%, rgba(255,255,255,0.92) 100%),
+                    url('https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1920&h=1080&fit=crop') center/cover fixed;
+    }
+
+    /* Container */
+    .product-details-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1.5rem;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        transition: 0.3s;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .back-btn:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateX(-5px);
+    }
+
+    html[data-bs-theme="light"] .back-btn {
+        background: rgba(0,0,0,0.05);
+        color: #2c2418;
+        border-color: rgba(0,0,0,0.1);
+    }
+
+    html[data-bs-theme="light"] .back-btn:hover {
+        background: rgba(0,0,0,0.1);
+    }
+
+    /* Main Grid - Adjusted */
+    .product-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    html[data-bs-theme="light"] .product-grid {
+        background: rgba(255,255,255,0.8);
+        border-color: rgba(0,0,0,0.05);
+    }
+
+    /* Left Column - Image and Pricing */
+    .left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Image Section */
+    .product-image-large {
+        width: 100%;
+        height: 450px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .product-image-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .product-image-large:hover img {
+        transform: scale(1.05);
+    }
+
+    .discount-badge-float {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: #ff3b3b;
+        color: #fff;
+        padding: 0.6rem 1rem;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 700;
+        z-index: 2;
+        box-shadow: 0 5px 20px rgba(255,59,59,0.4);
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    /* Pricing Card - Below Image */
+    .pricing-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    html[data-bs-theme="light"] .pricing-card {
+        background: rgba(255,255,255,0.9);
+        border-color: rgba(0,0,0,0.1);
+    }
+
+    .price-main {
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .price-current-red {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #ff3b3b;
+        text-shadow: 0 2px 10px rgba(255,59,59,0.3);
+    }
+
+    .price-old {
+        font-size: 1.3rem;
+        color: rgba(255,255,255,0.4);
+        text-decoration: line-through;
+    }
+
+    html[data-bs-theme="light"] .price-old {
+        color: rgba(0,0,0,0.3);
+    }
+
+    .save-badge {
+        background: #ffdb00;
+        color: #111;
+        padding: 0.4rem 0.8rem;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    /* Unit Pricing */
+    .unit-pricing {
+        margin-bottom: 1.5rem;
+    }
+
+    .unit-pricing-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    html[data-bs-theme="light"] .unit-pricing-title {
+        color: rgba(0,0,0,0.6);
+    }
+
+    .price-tier-simple {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    html[data-bs-theme="light"] .price-tier-simple {
+        border-bottom-color: rgba(0,0,0,0.1);
+    }
+
+    .tier-qty {
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.8);
+    }
+
+    html[data-bs-theme="light"] .tier-qty {
+        color: rgba(0,0,0,0.7);
+    }
+
+    .tier-price-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ff6b6b;
+    }
+
+    /* Add to Cart Button - Medium Size */
+    .add-cart-btn {
+        position: relative;
+        width: 100%;
+        padding: 0.9rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        overflow: hidden;
+        transition: 0.3s;
+        box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+
+    .add-cart-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: 0.5s;
+    }
+
+    .add-cart-btn:hover::before {
+        left: 100%;
+    }
+
+    .add-cart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102,126,234,0.6);
+    }
+
+    .cart-emoji {
+        font-size: 1.2rem;
+        animation: bounce 1s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* Right Column - Title and Description Only */
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        color: #fff;
+    }
+
+    html[data-bs-theme="light"] .right-column {
+        color: #2c2418;
+    }
+
+    .category-pill {
+        display: inline-block;
+        width: fit-content;
+        padding: 0.5rem 1.2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .product-title-large {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 0;
+        background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    html[data-bs-theme="light"] .product-title-large {
+        background: linear-gradient(135deg, #2c2418 0%, #4a4035 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .sku-text {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.6);
+    }
+
+    html[data-bs-theme="light"] .sku-text {
+        color: rgba(0,0,0,0.5);
+    }
+
+    .description-text {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.9);
+        padding: 1.2rem;
+        background: rgba(255,255,255,0.05);
+        border-left: 3px solid #667eea;
+        border-radius: 10px;
+    }
+
+    html[data-bs-theme="light"] .description-text {
+        color: #4a4035;
+        background: rgba(0,0,0,0.02);
+    }
+
+    /* Responsive */
+    @@media (max-width: 968px) {
+        .product-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .product-image-large {
+            height: 400px;
+        }
+
+        .product-title-large {
+            font-size: 2rem;
+        }
+
+        .price-current-red {
+            font-size: 3rem;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .details-wrapper {
+            padding: 1rem 0.5rem;
+        }
+
+        .product-grid {
+            padding: 1.5rem;
+        }
+
+        .product-image-large {
+            height: 300px;
+        }
+
+        .product-title-large {
+            font-size: 1.8rem;
+        }
+
+        .price-current-red {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+<div class="details-wrapper">
+    <div class="product-details-container">
+        <!-- Back Button -->
+        <a asp-action="Index" class="back-btn">
+            <span>←</span> Back to Shop
+        </a>
+
+        <!-- Product Grid -->
+        <div class="product-grid">
+            <!-- Left Column: Image + Pricing Card -->
+            <div class="left-column">
+                <!-- Product Image -->
+                <div class="product-image-large">
+                    @{
+                        var discount = Math.Round(((Model.ListPrice - Model.Price) / Model.ListPrice) * 100);
+                    }
+                    @if (discount > 0)
+                    {
+                        <div class="discount-badge-float">-@discount% OFF</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Title">
+                    }
+                    else
+                    {
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&h=800&fit=crop" alt="@Model.Title">
+                    }
+                </div>
+
+                <!-- Pricing Card -->
+                <div class="pricing-card">
+                    <!-- Main Price (RED) -->
+                    <div class="price-main">
+                        <span class="price-current-red">@Model.Price.ToString("N2") kr</span>
+                        @if (discount > 0)
+                        {
+                            <span class="price-old">@Model.ListPrice.ToString("N2") kr</span>
+                            <span class="save-badge">Save @discount%!</span>
+                        }
+                    </div>
+
+                    <!-- Unit Pricing -->
+                    <div class="unit-pricing">
+                        <div class="unit-pricing-title">💰 Bulk Pricing</div>
+                        <div class="price-tier-simple">
+                            <span class="tier-qty">1-50 units</span>
+                            <span class="tier-price-value">@Model.Price.ToString("N2") kr</span>
+                        </div>
+                        <div class="price-tier-simple">
+                            <span class="tier-qty">50+ units</span>
+                            <span class="tier-price-value">@Model.Price50.ToString("N2") kr</span>
+                        </div>
+                        <div class="price-tier-simple">
+                            <span class="tier-qty">100+ units</span>
+                            <span class="tier-price-value">@Model.Price100.ToString("N2") kr</span>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <button class="add-cart-btn">
+                        <span class="cart-emoji">🛒</span>
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Title + Description Only -->
+            <div class="right-column">
+                <!-- Category -->
+                @if (Model.Categories != null)
+                {
+                    <div class="category-pill">@Model.Categories.Name</div>
+                }
+
+                <!-- Title -->
+                <h1 class="product-title-large">@Model.Title</h1>
+
+                <!-- SKU -->
+                <p class="sku-text">SKU: @Model.SKU</p>
+
+                <!-- Description -->
+                <div class="description-text">
+                    @Model.Description
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -25,6 +25,13 @@ namespace VALHÄUS.Areas.Customer.Controllers
             return View(Products);
         }
 
+        public IActionResult Details(int Productid)
+        {
+            Product Product = _unitOfWork.Products.Get(u => u.Id == Productid, includeProperties: "Categories");
+
+            return View(Product);
+        }
+
         public IActionResult Privacy()
         {
             return View();

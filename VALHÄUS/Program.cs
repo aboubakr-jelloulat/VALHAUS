@@ -42,11 +42,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Required for Identity authentication
 app.UseAuthorization();
 
-//app.UseAuthentication() //  if Login required
-
-//app.MapRazorPages();
+app.MapRazorPages(); // Required for Identity Razor Pages (Login/Register)
 
 app.MapControllerRoute(
     name: "default",

@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
+using Valhaus.Utils;
 using VALHAUS.Areas.Customer.Controllers;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 
 
@@ -22,11 +24,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options
     .UseSqlServer(builder.Configuration.GetConnectionString("constr")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()  // Required for RoleManager
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 

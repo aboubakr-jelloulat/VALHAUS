@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
 using Valhaus.Models;
+using Valhaus.Utils;
 
 namespace VALHAUS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = StaticDetails.Role_Admin)]// bash maywelsohchi liha mn rout like valhus/categories/
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

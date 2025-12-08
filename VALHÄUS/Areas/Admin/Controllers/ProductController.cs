@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ using Valhaus.Data.Repository.Repositories;
 using Valhaus.Models;
 using Valhaus.Models.Models;
 using Valhaus.Models.ViewModels;
+using Valhaus.Utils;
 namespace VALHAUS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = StaticDetails.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

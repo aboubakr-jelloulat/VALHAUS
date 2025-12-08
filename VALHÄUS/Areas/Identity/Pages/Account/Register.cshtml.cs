@@ -105,7 +105,22 @@ namespace VALHAUS.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            // ApplicationUser additional fields
+            [Required]
+            [Display(Name = "Name")]
+            public string Name { get; set; }
 
+            [Display(Name = "Street Address")]
+            public string? StreetAddress { get; set; }
+
+            [Display(Name = "City")]
+            public string? City { get; set; }
+
+            [Display(Name = "State")]
+            public string? State { get; set; }
+
+            [Display(Name = "Postal Code")]
+            public string? PostalCode { get; set; }
 
             /// <summary>
             /// Roles ...
@@ -155,6 +170,14 @@ namespace VALHAUS.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                
+                // Populate ApplicationUser fields
+                user.Name = Input.Name;
+                user.StreetAddress = Input.StreetAddress;
+                user.City = Input.City;
+                user.State = Input.State;
+                user.PostalCode = Input.PostalCode;
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -202,6 +225,13 @@ namespace VALHAUS.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            // IMPORTANT: Repopulate RoleList so the dropdown shows options again
+            Input.RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem
+            {
+                Text = i,
+                Value = i
+            });
+            
             return Page();
         }
 

@@ -537,6 +537,24 @@
                     </div>
                 </div>
 
+
+                <!-- Company Selection -->
+                <div class="form-section" id="companySection" style="display:none;">
+                    <div class="section-title">
+                        <i class="bi bi-building"></i>
+                        <span>Company</span>    
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.CompanyId">Select Company</label>
+                        <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
+                            <option value="">Choose your company...</option>
+                        </select>
+                        <span asp-validation-for="Input.CompanyId" class="text-danger"></span>
+                    </div>
+                </div>
+
+
                 <!-- Submit Button -->
                 <button id="registerSubmit" type="submit" class="btn-submit">
                     Create Account
@@ -619,8 +637,43 @@
         })();
     </script>
 
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }
+    <!-- Company Toggle Script -->
+    <script>
+        console.log('Script loaded, jQuery version:', $.fn.jquery);
+        
+        $(document).ready(function () {
+            console.log('Document ready');
+            console.log('Company section exists:', $('#companySection').length > 0);
+            console.log('Role dropdown exists:', $('#Input_Role').length > 0);
+            
+            // Function to check role and toggle company section
+            function checkRoleAndToggleCompany() {
+                var selectedValue = $('#Input_Role').val();
+                var selectedText = $('#Input_Role option:selected').text();
+                
+                console.log('Checking role - Value:', selectedValue, 'Text:', selectedText);
+                
+                // Check both value and text to be sure
+                if(selectedValue === 'Company' || selectedText === 'Company'){
+                    console.log('Showing company section');
+                    $('#companySection').show();
+                }
+                else{
+                    console.log('Hiding company section');
+                    $('#companySection').hide();
+                }
+            }
+            
+            // Check initial state on page load (for form validation errors)
+            checkRoleAndToggleCompany();
+            
+            // Toggle company section when role selection changes
+            $('#Input_Role').on('change', function(){
+                console.log('Role changed!');
+                checkRoleAndToggleCompany();
+            });
+        });
+    </script>
+
 </body>
 </html>

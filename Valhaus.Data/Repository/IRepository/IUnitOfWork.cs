@@ -10,6 +10,7 @@ namespace Valhaus.Data.Repository.IRepository
     {
         ICategoryRepository Categories { get; }
         IProductRepository Products { get; }
+        ICompanyRepository Companies { get; }
         void Save();
     }
 

@@ -1,0 +1,126 @@
+﻿@model Company
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-form.css" />
+}
+
+@{
+    bool isUpdate = Model.Id != 0;
+}
+
+<!-- Header Section -->
+<div class="form-header">
+    <h1>VALHAUS</h1>
+    <div class="accent-line"><span></span></div>
+    <h2 class="form-title">@((isUpdate ? "Update" : "Create") + " Company")</h2>
+    <p class="form-subtitle">
+        @(isUpdate ? "Update existing company details" : "Add a new company to your system")
+    </p>
+</div>
+
+<!-- Form Container -->
+<div class="form-container">
+    <div class="row">
+        <div class="col-10">
+            <form method="post" asp-action="Upsert" class="row">
+                <input asp-for="Id" hidden />
+
+                <!-- Company Name -->
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">
+                        <i class="bi bi-building"></i>
+                        Company Name
+                    </label>
+                    <input asp-for="Name"
+                           type="text"
+                           class="form-input"
+                           required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label">
+                        <i class="bi bi-telephone"></i>
+                        Phone Number
+                    </label>
+                    <input asp-for="PhoneNumber"
+                           type="tel"
+                           class="form-input" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <!-- Street Address -->
+                <div class="form-group">
+                    <label asp-for="StreetAddress" class="form-label">
+                        <i class="bi bi-geo-alt"></i>
+                        Street Address
+                    </label>
+                    <input asp-for="StreetAddress"
+                           type="text"
+                           class="form-input" />
+                    <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                </div>
+
+                <!-- City and State Row -->
+                <div class="pricing-group">
+                    <!-- City -->
+                    <div class="form-group">
+                        <label asp-for="City" class="form-label">
+                            <i class="bi bi-pin-map"></i>
+                            City
+                        </label>
+                        <input asp-for="City"
+                               type="text"
+                               class="form-input" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+                    <!-- State -->
+                    <div class="form-group">
+                        <label asp-for="State" class="form-label">
+                            <i class="bi bi-map"></i>
+                            State
+                        </label>
+                        <input asp-for="State"
+                               type="text"
+                               class="form-input" />
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Postal Code -->
+                <div class="form-group">
+                    <label asp-for="PostalCode" class="form-label">
+                        <i class="bi bi-mailbox"></i>
+                        Postal Code
+                    </label>
+                    <input asp-for="PostalCode"
+                           type="text"
+                           class="form-input" />
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="bi bi-check-circle"></i>
+                        @(isUpdate ? "Update Company" : "Create Company")
+                    </button>
+
+                    <a asp-controller="Company" asp-action="Index" class="btn-cancel">
+                        <i class="bi bi-x-circle"></i>
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

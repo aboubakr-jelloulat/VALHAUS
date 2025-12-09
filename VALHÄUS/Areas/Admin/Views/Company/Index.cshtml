@@ -1,0 +1,50 @@
+﻿@model List<Company>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-management.css" />
+}
+
+@section Scripts
+{
+    <script src="/js/company/company.js"></script>
+}
+
+<!-- PAGE HEADER -->
+<div class="header">
+    <div class="header-content">
+
+        <div class="header-actions-left"></div>
+
+        <div class="header-text-center">
+            <h1>VALHAUS</h1>
+            <div class="accent-line"><span></span></div>
+            <div class="subtitle">COMPANY MANAGEMENT</div>
+        </div>
+
+        <div class="header-actions-right">
+            <a asp-controller="Company" asp-action="Upsert" class="btn-valhaus">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Add Company</span>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-container">
+    <table id="tblData" class="mini-table" style="width:100%">
+        <thead>
+            <tr>
+                <th class="category-name">Company Name</th>
+                <th>Phone Number</th>
+                <th>City</th>
+                <th>State</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+</div>

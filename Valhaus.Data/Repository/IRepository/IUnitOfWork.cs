@@ -11,6 +11,8 @@ namespace Valhaus.Data.Repository.IRepository
         ICategoryRepository Categories { get; }
         IProductRepository Products { get; }
         ICompanyRepository Companies { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         void Save();
     }
 

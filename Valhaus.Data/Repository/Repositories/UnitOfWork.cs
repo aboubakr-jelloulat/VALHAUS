@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
+using Valhaus.Models.Models;
 
 namespace Valhaus.Data.Repository.Repositories
 {
@@ -17,12 +18,18 @@ namespace Valhaus.Data.Repository.Repositories
         public IProductRepository Products { get; private set; }
         public ICompanyRepository Companies { get; private set; }
 
+        public IShoppingCartRepository ShoppingCart { get; private set; }
+
+        public IApplicationUserRepository ApplicationUser { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             Categories = new CategoryRepository(_db);
             Products = new ProductRepository(_db);
             Companies = new CompanyRepository(_db);
+            ShoppingCart = new ShoppingCartRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
         }
 
 

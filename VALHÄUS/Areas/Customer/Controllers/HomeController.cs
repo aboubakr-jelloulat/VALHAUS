@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Models;
@@ -27,9 +29,52 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         public IActionResult Details(int Productid)
         {
-            Product Product = _unitOfWork.Products.Get(u => u.Id == Productid, includeProperties: "Categories");
+            ShoppingCart cart = new()
+            {
+                Product = _unitOfWork.Products.Get(u => u.Id == Productid, includeProperties: "Categories"),
+                Count = 1,
+                ProductId = Productid
+            };
 
-            return View(Product);
+            return View(cart);
+        }
+
+        [HttpPost]
+        [Authorize]
+        //It protects the action so only logged-in users can access it.
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            
+            shoppingCart.Product = _unitOfWork.Products.Get(u => u.Id == shoppingCart.ProductId, includeProperties: "Categories");
+            
+            if (shoppingCart.Product == null)
+            {
+                return NotFound();
+            }
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            shoppingCart.ApplicationUserId = userId;
+            
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId);
+            
+            if (cartFromDb != null)
+            {
+                TempData["success"] = "Product quantity updated successfully!";
+                cartFromDb.Count += shoppingCart.Count;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                TempData["success"] = "Product added to cart successfully!";
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+            
+            _unitOfWork.Save();
+            
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Valhaus.Data.Repository.Repositories
 {
@@ -37,9 +38,11 @@ namespace Valhaus.Data.Repository.Repositories
             dbSet.RemoveRange(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            query = (tracked) ? dbSet : dbSet.AsNoTracking();
+
             query = query.Where(filter);
 
             if (!string.IsNullOrEmpty(includeProperties))
@@ -50,8 +53,8 @@ namespace Valhaus.Data.Repository.Repositories
                     query = query.Include(includeProp); // Include navigation properties
                 }
             }
-
             return (query.FirstOrDefault());
+
         }
 
         public IEnumerable<T> GetAll(string? includeProperties = null)

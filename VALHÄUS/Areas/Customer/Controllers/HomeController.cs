@@ -1,10 +1,11 @@
-using System.Diagnostics;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Models;
 using Valhaus.Models.Models;
+using Valhaus.Utils;
 
 namespace VALHAUS.Areas.Customer.Controllers
 {
@@ -39,15 +40,17 @@ namespace VALHAUS.Areas.Customer.Controllers
             return View(cart);
         }
 
+
+
         [HttpPost]
         [Authorize]
         //It protects the action so only logged-in users can access it.
         public IActionResult Details(ShoppingCart shoppingCart)
         {
-            
-            shoppingCart.Product = _unitOfWork.Products.Get(u => u.Id == shoppingCart.ProductId, includeProperties: "Categories");
-            
-            if (shoppingCart.Product == null)
+
+            var productFromDb = _unitOfWork.Products.Get(u => u.Id == shoppingCart.ProductId);
+
+            if (productFromDb == null)
             {
                 return NotFound();
             }
@@ -76,6 +79,9 @@ namespace VALHAUS.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
         public IActionResult Privacy()
         {

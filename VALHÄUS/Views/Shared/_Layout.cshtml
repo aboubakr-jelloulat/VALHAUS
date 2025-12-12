@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Valhaus.Data.Repository.IRepository
+@using System.Security.Claims
+@inject IUnitOfWork UnitOfWork
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -89,6 +93,27 @@
 
                         
                     </ul>
+                    <!-- Cart Component -->
+                    <div class="d-flex align-items-center me-3">
+                        <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link position-relative text-dark">
+                            <i class="bi bi-bag fs-5"></i>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                                if (userId != null)
+                                {
+                                    var count = UnitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count();
+                                    if (count > 0)
+                                    {
+                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7em;">
+                                            @count
+                                            <span class="visually-hidden">items in cart</span>
+                                        </span>
+                                    }
+                                }
+                            }
+                        </a>
+                    </div>
                     <partial name="_LoginPartial">
 
                     <!-- Simple Circular Dark Mode Toggle -->

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.BillingPortal;
+using Stripe.Checkout;
 using System.Security.Claims;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Models.Models;
@@ -43,7 +45,7 @@ namespace VALHAUS.Areas.Customer.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        private double _calculatePriceBasedOnQuantity(ShoppingCart shoppingCart)
+        private static double _calculatePriceBasedOnQuantity(ShoppingCart shoppingCart)
         {
             if (shoppingCart.Count <= StaticDetails.PRICE_50)
             {
@@ -126,14 +128,15 @@ namespace VALHAUS.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId,
-                includeProperties: "Product");
+            ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(
+                u => u.ApplicationUserId == userId,
+                includeProperties: "Product"
+            );
 
-            ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+            ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
             ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-
 
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -141,21 +144,19 @@ namespace VALHAUS.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
 
-            if (applicationUser.CompanyId.GetValueOrDefault() == 0) // GetValueOrDefault because CompanyId maybe be null
+            if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
-                // customer 
                 ShoppingCartVM.OrderHeader.PaymentStatus = StaticDetails.PaymentStatusPending;
                 ShoppingCartVM.OrderHeader.OrderStatus = StaticDetails.StatusPending;
             }
             else
             {
-                // company user
                 ShoppingCartVM.OrderHeader.PaymentStatus = StaticDetails.PaymentStatusDelayedPayment;
                 ShoppingCartVM.OrderHeader.OrderStatus = StaticDetails.StatusApproved;
             }
+
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
             _unitOfWork.Save();
-
 
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -170,49 +171,53 @@ namespace VALHAUS.Areas.Customer.Controllers
                 _unitOfWork.Save();
             }
 
-            //if (applicationUser.CompanyId.GetValueOrDefault() == 0)
-            //{
-            //    //it is a regular customer account and we need to capture payment
-            //    //stripe logic
-            //    var domain = Request.Scheme + "://" + Request.Host.Value + "/";
-            //    var options = new SessionCreateOptions
-            //    {
-            //        SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
-            //        CancelUrl = domain + "customer/cart/index",
-            //        LineItems = new List<SessionLineItemOptions>(),
-            //        Mode = "payment",
-            //    };
+            if (applicationUser.CompanyId.GetValueOrDefault() == 0)
+            {
+                // Stripe logic
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                    CancelUrl = domain + "customer/cart/index",
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
 
-            //    foreach (var item in ShoppingCartVM.ShoppingCartList)
-            //    {
-            //        var sessionLineItem = new SessionLineItemOptions
-            //        {
-            //            PriceData = new SessionLineItemPriceDataOptions
-            //            {
-            //                UnitAmount = (long)(item.Price * 100), // $20.50 => 2050
-            //                Currency = "usd",
-            //                ProductData = new SessionLineItemPriceDataProductDataOptions
-            //                {
-            //                    Name = item.Product.Title
-            //                }
-            //            },
-            //            Quantity = item.Count
-            //        };
-            //        options.LineItems.Add(sessionLineItem);
-            //    }
+                foreach (var item in ShoppingCartVM.ShoppingCartList)
+                {
+                    var sessionLineItem = new Stripe.Checkout.SessionLineItemOptions
+                    {
+                        PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.Price * 100),
+                            Currency = "usd",
+                            ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Product.Title
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
 
+                var service = new Stripe.Checkout.SessionService();
+                Stripe.Checkout.Session session = service.Create(options);
+                _unitOfWork.OrderHeader.UpdateStripePaymentID(
+                    ShoppingCartVM.OrderHeader.Id,
+                    session.Id,
+                    session.PaymentIntentId
+                );
+                _unitOfWork.Save();
 
-            //    var service = new SessionService();
-            //    Session session = service.Create(options);
-            //    _unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
-            //    _unitOfWork.Save();
-            //    Response.Headers.Add("Location", session.Url);
-            //    return new StatusCodeResult(303);
-
-            //}
+                Response.Headers.Add("Location", session.Url);
+                return new StatusCodeResult(303);
+            }
 
             return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
         }
+
+
 
 
         public IActionResult OrderConfirmation(int id)

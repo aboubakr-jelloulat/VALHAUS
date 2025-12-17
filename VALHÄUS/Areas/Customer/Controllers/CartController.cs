@@ -248,11 +248,8 @@ namespace VALHAUS.Areas.Customer.Controllers
                     _unitOfWork.Save();
                 }
 
-                HttpContext.Session.Clear();
-                /*
-                    Clears the user’s session data (temporary data stored during the shopping process).
-                    Purpose: Avoid keeping leftover cart info in memory after order completion.
-                 */
+                
+              
             }
 
             //  Retrieves all shopping cart items for this user from the database & Remove user shopping cart items after order

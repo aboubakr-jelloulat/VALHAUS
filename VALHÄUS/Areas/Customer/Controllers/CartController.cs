@@ -189,8 +189,8 @@ namespace VALHAUS.Areas.Customer.Controllers
                     {
                         PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)(item.Price * 100),
-                            Currency = "usd",
+                            UnitAmount = (long)(item.Price * 100), // 250.50 NOK -> 25050
+                            Currency = "nok",
                             ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = item.Product.Title
@@ -222,9 +222,50 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
+            
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id,includeProperties: "ApplicationUser"
+            );
+
+            if (orderHeader.PaymentStatus != StaticDetails.PaymentStatusDelayedPayment)
+            {
+                // Only for regular customer (not company)
+                var service = new Stripe.Checkout.SessionService();
+                Stripe.Checkout.Session session = service.Get(orderHeader.SessionId);
+
+                // Check if payment is completed
+                if (session.PaymentStatus != null && session.PaymentStatus.ToLower() == "paid")
+                {
+                    _unitOfWork.OrderHeader.UpdateStripePaymentID(
+                        id,
+                        session.Id,
+                        session.PaymentIntentId
+                    );
+                    _unitOfWork.OrderHeader.UpdateStatus(
+                        id,
+                        StaticDetails.StatusApproved,
+                        StaticDetails.PaymentStatusApproved
+                    );
+                    _unitOfWork.Save();
+                }
+
+                HttpContext.Session.Clear();
+                /*
+                    Clears the user’s session data (temporary data stored during the shopping process).
+                    Purpose: Avoid keeping leftover cart info in memory after order completion.
+                 */
+            }
+
+            //  Retrieves all shopping cart items for this user from the database & Remove user shopping cart items after order
+            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
+                .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId)
+                .ToList();
+
+            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+            _unitOfWork.Save();
 
             return View(id);
         }
+
 
 
         public IActionResult plus(int cartId)

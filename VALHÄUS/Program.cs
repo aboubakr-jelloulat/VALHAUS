@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Stripe;
 using Valhaus.Data.Data;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
@@ -26,6 +27,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders() ;
+
+// Configure Strip
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+
 
 builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = $"/Identity/Account/Login";
@@ -50,6 +56,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// configure Strip Api Keys
+
+//StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:Secretkey").Get<string>();
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:Secretkey"];
+
 
 app.UseRouting();
 

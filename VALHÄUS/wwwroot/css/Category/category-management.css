@@ -610,3 +610,302 @@ table.dataTable.no-footer {
         margin-bottom: 12px;
     }
 }
+
+
+/* ========================================
+   ORDER MANAGEMENT STYLES
+   Add this section to the bottom of your existing CSS file
+   ======================================== */
+
+/* Order Filter Container */
+.order-filter-container {
+    max-width: 1000px;
+    margin: 40px auto 20px;
+    padding: 0 25px;
+}
+
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eee6d8;
+}
+
+/* Individual Filter Pill */
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #faf8f6;
+    color: #5a5a5a;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1.5px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+    .filter-pill i {
+        font-size: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    /* Hover Effect */
+    .filter-pill:hover {
+        background: #f8f6f3;
+        color: #1A1A1A;
+        border-color: rgba(212, 175, 55, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+        .filter-pill:hover i {
+            transform: scale(1.1);
+        }
+
+    /* Active State */
+    .filter-pill.active {
+        background: linear-gradient(135deg, #d4af37 0%, #f0d78c 50%, #d4af37 100%);
+        color: #ffffff;
+        border-color: #d4af37;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        font-weight: 600;
+    }
+
+        .filter-pill.active i {
+            transform: scale(1.15);
+        }
+
+/* Order Table Specific Styles */
+.order-table thead th {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.order-table .order-id {
+    width: 80px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+}
+
+.order-table .customer-name {
+    min-width: 150px;
+}
+
+.order-table .contact-info {
+    min-width: 130px;
+    font-size: 14px;
+}
+
+.order-table .order-status {
+    width: 140px;
+    text-align: center;
+}
+
+.order-table .order-total {
+    width: 120px;
+    text-align: right;
+    font-weight: 600;
+    color: #d4af37;
+}
+
+/* Status Badge Styling */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-approved {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.status-inprocess {
+    background: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Dark Mode Support */
+[data-bs-theme="dark"] .filter-pills {
+    background: #1f1f1f;
+    border-color: rgba(212, 175, 55, 0.2);
+}
+
+[data-bs-theme="dark"] .filter-pill {
+    background: #2a2a2a;
+    color: #adb5bd;
+}
+
+    [data-bs-theme="dark"] .filter-pill:hover {
+        background: #333333;
+        color: #ffffff;
+    }
+
+    [data-bs-theme="dark"] .filter-pill.active {
+        background: linear-gradient(135deg, #d4af37 0%, #e6c456 50%, #d4af37 100%);
+        color: #000000;
+    }
+
+[data-bs-theme="dark"] .order-table .order-total {
+    color: #f0d78c;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .filter-pills {
+        gap: 10px;
+        padding: 16px;
+    }
+
+    .filter-pill {
+        padding: 10px 18px;
+        font-size: 12px;
+    }
+
+        .filter-pill i {
+            font-size: 14px;
+        }
+}
+
+@media (max-width: 768px) {
+    .order-filter-container {
+        padding: 0 15px;
+    }
+
+    .filter-pills {
+        justify-content: stretch;
+    }
+
+    .filter-pill {
+        flex: 1 1 calc(50% - 6px);
+        justify-content: center;
+        padding: 12px 16px;
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-pill {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+}
+
+/* DataTables Integration */
+#tblData_wrapper .dataTables_length,
+#tblData_wrapper .dataTables_filter {
+    padding: 15px 0;
+}
+
+    #tblData_wrapper .dataTables_length label,
+    #tblData_wrapper .dataTables_filter label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        color: #5a5a5a;
+        font-weight: 500;
+    }
+
+#tblData_wrapper .dataTables_info,
+#tblData_wrapper .dataTables_paginate {
+    padding: 15px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+}
+
+/* Pagination Styling */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 8px 14px;
+    margin: 0 3px;
+    border-radius: 6px;
+    border: 1px solid #eee6d8;
+    background: #ffffff;
+    color: #5a5a5a !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #faf8f6;
+        border-color: #d4af37;
+        color: #1A1A1A !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: linear-gradient(135deg, #d4af37 0%, #f0d78c 100%);
+        border-color: #d4af37;
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+/* View Details Button in Table */
+.btn-view-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #d4af37 0%, #f0d78c 100%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 6px;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+    .btn-view-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+        color: #ffffff;
+    }
+
+    .btn-view-details i {
+        font-size: 14px;
+    }

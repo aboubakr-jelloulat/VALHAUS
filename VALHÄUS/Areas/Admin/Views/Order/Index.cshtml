@@ -1,5 +1,82 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    var status = Context.Request.Query["status"];
+
+    // This reads the URL query string.
+    // for example / Admin / Order / Index ? status = pending
+
+    
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/Category/category-management.css?v=1.0.1" />
+}
+
+<!-- Header Section -->
+<div class="header">
+    <div class="header-content">
+        <div class="header-actions-left"></div>
+
+        <div class="header-text-center">
+            <h1>ORDER MANAGEMENT</h1>
+            <div class="accent-line">
+                <span></span>
+            </div>
+            <p class="subtitle">LUXURY ORDER TRACKING</p>
+        </div>
+
+        <div class="header-actions-right"></div>
+    </div>
+</div>
+
+<!-- Status Filter Pills -->
+<div class="order-filter-container">
+    <div class="filter-pills">
+        <a asp-controller="Order" asp-action="Index" asp-route-status="all"
+           class="filter-pill @(status == "all" || string.IsNullOrEmpty(status) ? "active" : "")">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <span>All Orders</span>
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="pending"
+           class="filter-pill @(status == "pending" ? "active" : "")">
+            <i class="bi bi-clock-history"></i>
+            <span>Payment Pending</span>
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="approved"
+           class="filter-pill @(status == "approved" ? "active" : "")">
+            <i class="bi bi-check-circle"></i>
+            <span>Approved</span>
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="inprocess"
+           class="filter-pill @(status == "inprocess" ? "active" : "")">
+            <i class="bi bi-arrow-repeat"></i>
+            <span>In Process</span>
+        </a>
+        <a asp-controller="Order" asp-action="Index" asp-route-status="completed"
+           class="filter-pill @(status == "completed" ? "active" : "")">
+            <i class="bi bi-check-all"></i>
+            <span>Completed</span>
+        </a>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="table-container">
+    <table id="tblData" class="mini-table order-table" style="width:100%">
+        <thead>
+            <tr>
+                <th class="order-id">Order ID</th>
+                <th class="customer-name">Customer</th>
+                <th class="contact-info">Phone</th>
+                <th class="contact-info">Email</th>
+                <th class="order-status">Status</th>
+                <th class="order-total">Total</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/Order/order.js"></script>
 }

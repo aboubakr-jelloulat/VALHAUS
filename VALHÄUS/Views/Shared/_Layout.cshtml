@@ -67,8 +67,8 @@
                             </a>
                         </li>
 
-                        @if(User.IsInRole(StaticDetails.Role_Admin))
-                        {
+                    @if(User.IsInRole(StaticDetails.Role_Admin))
+                    {
                             <!-- Category Link -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">
@@ -78,25 +78,30 @@
                             <!-- Product Link -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">
-                                    <i class="bi bi-cart"></i> Products
+                                    <i class="bi bi-box-seam"></i> Products
                                 </a>
                             </li>
-
                             <!-- Company Link -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Company" asp-action="Index">
                                     <i class="bi bi-building"></i> Company
                                 </a>
                             </li>
-                            
-                        }
+                           <!-- Order Management Link -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                                    <i class="bi bi-box-seam-fill"></i> Order Management
+                                </a>
+                            </li>
+                    }
 
                         
                     </ul>
                     <!-- Cart Component -->
                     <div class="d-flex align-items-center me-3">
                         <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link position-relative text-dark">
-                            <i class="bi bi-bag fs-5"></i>
+                            <i class="bi bi-cart3"></i>
+
                             @if (User.Identity.IsAuthenticated)
                             {
                                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -105,7 +110,7 @@
                                     var count = UnitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count();
                                     if (count > 0)
                                     {
-                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7em;">
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7em;">
                                             @count
                                             <span class="visually-hidden">items in cart</span>
                                         </span>
@@ -114,6 +119,8 @@
                             }
                         </a>
                     </div>
+
+
                     <partial name="_LoginPartial">
 
                     <!-- Simple Circular Dark Mode Toggle -->

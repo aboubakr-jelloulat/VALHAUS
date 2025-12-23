@@ -278,9 +278,12 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         public IActionResult minus(int cartId)
         {
-            var DbCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+            var DbCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked:true);
             if (DbCart.Count <= 1)
             {
+                // session -1
+                HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == DbCart.ApplicationUserId).Count() - 1);
+
                 // Delete
                 _unitOfWork.ShoppingCart.Remove(DbCart);
             }
@@ -296,10 +299,11 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         public IActionResult remove(int cartId)
         {
-            var DbCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+            var DbCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked:true);
+            // session -1 
+            HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == DbCart.ApplicationUserId).Count() - 1);
 
             _unitOfWork.ShoppingCart.Remove(DbCart);
-
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }

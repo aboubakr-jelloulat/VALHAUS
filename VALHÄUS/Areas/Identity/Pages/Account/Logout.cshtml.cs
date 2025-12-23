@@ -26,6 +26,9 @@ namespace VALHAUS.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
+
+            HttpContext.Session.Clear(); // clear session if the user is logout 
+
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {

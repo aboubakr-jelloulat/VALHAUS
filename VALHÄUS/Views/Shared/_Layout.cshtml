@@ -1,7 +1,7 @@
 ﻿@using Valhaus.Data.Repository.IRepository
 @using System.Security.Claims
-@inject IUnitOfWork UnitOfWork
-@inject IHttpContextAccessor HttpContextAccessor
+@* @inject IUnitOfWork UnitOfWork // old way without use the session  *@
+@inject IHttpContextAccessor HttpContextAccessor // acces the shopping cart session 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,7 +102,9 @@
                         <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link position-relative text-dark">
                             <i class="bi bi-cart3"></i>
 
-                            @if (User.Identity.IsAuthenticated)
+
+                            @* depend in data base not session - my old way *@
+                            @* @if (User.Identity.IsAuthenticated)
                             {
                                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                                 if (userId != null)
@@ -116,7 +118,18 @@
                                         </span>
                                     }
                                 }
+                            } *@
+
+                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart) is not null)
+                            {
+                                var count = HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart);
+                                
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7em;">
+                                        @count
+                                    <span class="visually-hidden">items in cart</span>
+                                </span>
                             }
+
                         </a>
                     </div>
 

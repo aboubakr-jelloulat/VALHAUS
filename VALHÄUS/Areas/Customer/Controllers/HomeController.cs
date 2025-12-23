@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Diagnostics;
 using System.Security.Claims;
 using Valhaus.Data.Repository.IRepository;
@@ -23,6 +24,16 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim is not null)
+            {
+                //User id is InstantiationBindingInterceptionData the claim.value
+                HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+            }
+
+            
             IEnumerable<Product> Products = _unitOfWork.Products.GetAll(includeProperties: "Categories");
 
             return View(Products);
@@ -64,17 +75,24 @@ namespace VALHAUS.Areas.Customer.Controllers
             
             if (cartFromDb != null)
             {
+                // update
                 TempData["success"] = "Product quantity updated successfully!";
                 cartFromDb.Count += shoppingCart.Count;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
             }
             else
             {
+                // add to cart
                 TempData["success"] = "Product added to cart successfully!";
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.Save();
+
+                // session 
+                HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count());
             }
             
-            _unitOfWork.Save();
+            
             
 
             return RedirectToAction(nameof(Index));

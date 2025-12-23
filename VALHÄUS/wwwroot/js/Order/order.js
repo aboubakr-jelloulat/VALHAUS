@@ -16,6 +16,9 @@ $(document).ready(function () {
     else if (url.includes("approved")) {
         loadDataTable("approved");
     }
+    else if (url.includes("cancelled")) {
+        loadDataTable("cancelled");
+    }
     else {
         loadDataTable("all");
     }

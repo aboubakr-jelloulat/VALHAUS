@@ -1,0 +1,75 @@
+﻿@model int
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <!-- Compact Success Card -->
+            <div class="card border-0 shadow">
+                <div class="card-body p-4 text-center">
+
+                    <!-- Success Icon -->
+                    <div class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 48px;"></i>
+                    </div>
+
+                    <!-- Success Message -->
+                    <h3 class="fw-bold text-success mb-2">Payment Successful!</h3>
+                    <p class="text-muted mb-3">Your payment has been processed</p>
+
+                    <!-- Order Number -->
+                    <div class="alert alert-light border py-2 mb-3">
+                        <small class="text-muted">Order Number:</small>
+                        <span class="badge bg-primary ms-1">#@Model</span>
+                    </div>
+
+                    <!-- Small Image -->
+                    <div class="mb-3">
+                        <img src="~/images/lawn_leaf.jpg"
+                             class="img-fluid rounded"
+                             style="max-width: 200px; width: 100%;"
+                             alt="Success" />
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <a asp-area="Admin"
+                           asp-controller="Order"
+                           asp-action="Details"
+                           asp-route-orderId="@Model"
+                           class="btn btn-primary">
+                            <i class="bi bi-eye me-1"></i>
+                            View Order Details
+                        </a>
+                        <a asp-area="Admin"
+                           asp-controller="Order"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary btn-sm">
+                            Back to Orders
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .card {
+        animation: fadeIn 0.4s ease-out;
+    }
+</style>

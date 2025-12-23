@@ -58,12 +58,17 @@
             <span>Completed</span>
         </a>
 
+
+
         @* Add the Cancelled filter *@
-        <a asp-controller="Order" asp-action="Index" asp-route-status="Cancelled"
-           class="filter-pill @(status == "Cancelled" ? "active" : "")">
-            <i class="bi bi-check-all"></i>
-            <span>Completed</span>
+        <a asp-controller="Order"
+        asp-action="Index"
+        asp-route-status="cancelled"
+        class="filter-pill @(status == "cancelled" ? "active" : "")">
+            <i class="bi bi-x-circle"></i>
+            <span>Cancelled</span>
         </a>
+
 
     </div>
 </div>

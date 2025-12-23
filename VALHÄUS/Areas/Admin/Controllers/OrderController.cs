@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Models.Models;
 using Valhaus.Models.ViewModels;
@@ -9,6 +10,7 @@ using Valhaus.Utils;
 namespace VALHAUS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -70,11 +72,62 @@ namespace VALHAUS.Areas.Admin.Controllers
         [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
         public IActionResult StartProcessing()
         {
-            
-
-            return View();
+            _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, StaticDetails.StatusInProcess);
+            _unitOfWork.Save();
+            TempData["Success"] = "Order Start Processing...";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
+        public IActionResult ShipOrder()
+        {
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+
+            orderHeader.TrackingNumber  = OrderVM.OrderHeader.TrackingNumber;
+            orderHeader.Carrier         = OrderVM.OrderHeader.Carrier;
+            orderHeader.OrderStatus     = StaticDetails.StatusShipped;
+            orderHeader.ShippingDate    = DateTime.Now;
+
+            if (orderHeader.PaymentStatus == StaticDetails.PaymentStatusDelayedPayment)
+            {
+                orderHeader.PaymentDueDate = DateTime.Now.AddDays(30);
+            }
+
+            _unitOfWork.OrderHeader.Update(orderHeader);
+            _unitOfWork.Save();
+            TempData["Success"] = "Order Shipped Successfully.";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
+        public IActionResult CancelOrder()
+        {
+
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+
+            if (orderHeader.PaymentStatus == StaticDetails.PaymentStatusApproved)
+            {
+                var options = new RefundCreateOptions
+                {
+                    Reason = RefundReasons.RequestedByCustomer,
+                    PaymentIntent = orderHeader.PaymentIntentId
+                };
+
+                var service = new RefundService();
+                Refund refund = service.Create(options);
+
+                _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, StaticDetails.StatusCancelled, StaticDetails.StatusRefunded);
+            }
+            else
+            {
+                _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, StaticDetails.StatusCancelled, StaticDetails.StatusCancelled);
+            }
+            _unitOfWork.Save();
+            TempData["Success"] = "Order Cancelled Successfully.";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+        }
 
 
         #region API CALLS

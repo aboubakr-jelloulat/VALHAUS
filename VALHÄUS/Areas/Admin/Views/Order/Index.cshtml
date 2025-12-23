@@ -22,7 +22,7 @@
             <div class="accent-line">
                 <span></span>
             </div>
-            <p class="subtitle">LUXURY ORDER TRACKING</p>
+            <p class="subtitle">ORDER TRACKING</p>
         </div>
 
         <div class="header-actions-right"></div>
@@ -57,6 +57,14 @@
             <i class="bi bi-check-all"></i>
             <span>Completed</span>
         </a>
+
+        @* Add the Cancelled filter *@
+        <a asp-controller="Order" asp-action="Index" asp-route-status="Cancelled"
+           class="filter-pill @(status == "Cancelled" ? "active" : "")">
+            <i class="bi bi-check-all"></i>
+            <span>Completed</span>
+        </a>
+
     </div>
 </div>
 

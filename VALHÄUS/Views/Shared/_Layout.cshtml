@@ -100,7 +100,11 @@
                     <!-- Cart Component -->
                     <div class="d-flex align-items-center me-3">
                         <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link position-relative text-dark">
-                            <i class="bi bi-cart3"></i>
+                            
+                                @* using view Components *@
+                                
+                            @await Component.InvokeAsync("ShoppingCart")
+
 
 
                             @* depend in data base not session - my old way *@
@@ -120,7 +124,9 @@
                                 }
                             } *@
 
-                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart) is not null)
+                            @* without the view component this is a bad practice *@
+
+                            @* @if (HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart) is not null)
                             {
                                 var count = HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart);
                                 
@@ -128,7 +134,7 @@
                                         @count
                                     <span class="visually-hidden">items in cart</span>
                                 </span>
-                            }
+                            } *@
 
                         </a>
                     </div>

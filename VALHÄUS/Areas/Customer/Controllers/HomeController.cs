@@ -24,15 +24,6 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (claim is not null)
-            {
-                //User id is InstantiationBindingInterceptionData the claim.value
-                HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
-            }
-
             
             IEnumerable<Product> Products = _unitOfWork.Products.GetAll(includeProperties: "Categories");
 

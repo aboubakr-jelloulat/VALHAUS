@@ -50,7 +50,6 @@ builder.Services.AddAuthentication().AddGoogle(options =>
 
 
 
-
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -5,110 +5,61 @@
  * Date: 2025-11-06
  */
 
-(function () {
+/**
+ * VALHAUS Dark Mode Toggle (Bootstrap 5.3)
+ * Author: codew4re
+ */
+
+(() => {
     'use strict';
 
-    // ===== Storage Functions =====
+    const STORAGE_KEY = 'valhaus-theme';
 
-    // Get the saved theme from browser localStorage
-    const getStoredTheme = () => localStorage.getItem('valhaus-theme');
+    const getStoredTheme = () => localStorage.getItem(STORAGE_KEY);
+    const setStoredTheme = (theme) => localStorage.setItem(STORAGE_KEY, theme);
 
-    // Save theme to browser localStorage
-    const setStoredTheme = (theme) => localStorage.setItem('valhaus-theme', theme);
-
-    // ===== Theme Detection =====
-
-    // Get user's preferred theme (saved or system default)
     const getPreferredTheme = () => {
-        const storedTheme = getStoredTheme();
-        if (storedTheme) {
-            return storedTheme;
-        }
-
-        // Check system preference
-        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return isDarkMode ? 'dark' : 'light';
+        return getStoredTheme()
+            ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     };
 
-    // ===== Apply Theme =====
-
-    // Apply theme to the page
     const setTheme = (theme) => {
         document.documentElement.setAttribute('data-bs-theme', theme);
         updateIcon(theme);
-        console.log('Theme applied:', theme);
     };
 
-    // ===== Update Icon =====
-
-    // Change icon based on current theme
     const updateIcon = (theme) => {
-        const toggle = document.getElementById('theme-toggle');
-        if (!toggle) return;
-
-        const icon = toggle.querySelector('.theme-icon');
+        const icon = document.querySelector('#theme-toggle .theme-icon');
         if (!icon) return;
 
-        if (theme === 'dark') {
-            // Dark mode: show moon icon
-            icon.className = 'bi bi-moon-stars theme-icon';
-        } else {
-            // Light mode: show sun icon
-            icon.className = 'bi bi-sun-fill theme-icon';
-        }
+        icon.className = theme === 'dark'
+            ? 'bi bi-moon-stars-fill theme-icon'
+            : 'bi bi-sun-fill theme-icon';
     };
 
-    // ===== Toggle Theme =====
-
-    // Switch between light and dark mode
     const toggleTheme = () => {
-        const currentTheme = getStoredTheme() || getPreferredTheme();
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-        console.log('Switching theme:', currentTheme, '→', newTheme);
+        const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark'
+            ? 'light'
+            : 'dark';
 
         setStoredTheme(newTheme);
         setTheme(newTheme);
     };
 
-    // ===== Initialize =====
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        setTheme(getPreferredTheme());
 
-    // Set up theme when page loads
-    const initTheme = () => {
-        const preferredTheme = getPreferredTheme();
-        setTheme(preferredTheme);
-        console.log('Dark mode initialized!');
-    };
-
-    // ===== Event Listeners =====
-
-    // Initialize theme as soon as possible
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initTheme);
-    } else {
-        initTheme();
-    }
-
-    // Add click event to toggle button
-    window.addEventListener('DOMContentLoaded', () => {
-        const themeToggle = document.getElementById('theme-toggle');
-
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
-            console.log('Theme toggle button ready! ✅');
-        } else {
-            console.error('Theme toggle button not found! ❌');
+        const toggleBtn = document.getElementById('theme-toggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', toggleTheme);
         }
     });
 
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // Only auto-change if user hasn't manually set a preference
+    // System theme sync (only if user didn't choose manually)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
         if (!getStoredTheme()) {
-            const newTheme = e.matches ? 'dark' : 'light';
-            setTheme(newTheme);
-            console.log('System theme changed:', newTheme);
+            setTheme(e.matches ? 'dark' : 'light');
         }
     });
-
 })();

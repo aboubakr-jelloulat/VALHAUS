@@ -1,7 +1,12 @@
 ﻿@using Valhaus.Data.Repository.IRepository
 @using System.Security.Claims
-@* @inject IUnitOfWork UnitOfWork // old way without use the session  *@
-@inject IHttpContextAccessor HttpContextAccessor // acces the shopping cart session 
+
+@* old way without use the session *@
+@inject IUnitOfWork UnitOfWork 
+
+@* acces the shopping cart session *@
+@inject IHttpContextAccessor HttpContextAccessor
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,58 +14,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - VALHAUS</title>
 
-    <!-- ===== Core Styles ===== -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-    <!-- ===== Nimbus Theme ===== -->
+    @* Nimbus Theme *@
     <link rel="stylesheet" href="~/css/nimbus/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/nimbus/onepage.css" />
     <link rel="stylesheet" href="~/css/nimbus/vendors/aos.css" />
 
-    <!-- ===== Icons ===== -->
+    @* Icons *@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <!-- ===== Dark Mode Styles ===== -->
+    @* Dark Mode Styles *@
     <link rel="stylesheet" href="~/css/DarkMode/dark-mode.css" />
 
-    <!-- ===== Custom Site Styles ===== -->
+    @* Custom Site Styles *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VALHAUS.styles.css" asp-append-version="true" />
 
-    @* == Notification Messages == *@
+    @* toastr Notification*@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
-    @* ======== DataTables API (SINGLE VERSION ONLY) ======= *@
+    @* DataTables API  *@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 
-    <!-- ===== Page-Specific Styles ===== -->
+    @* Page Specific Styles *@
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <!-- ===== Navigation Header ===== -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                @* <!-- Brand Logo -->
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <strong>VALHAUS</strong>
-                </a> *@
+                
 
-                <!-- Mobile Menu Toggle -->
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
+                @* Mobile Menu Toggle *@
+                <button class="navbar-toggler"  type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <!-- Navigation Menu -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav me-auto">
-                        <!-- Home Link -->
+                        @* Home *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Index">
                                 <i class="bi bi-house-door"></i> Home
@@ -69,48 +62,44 @@
 
                     @if(User.IsInRole(StaticDetails.Role_Admin))
                     {
-                            <!-- Category Link -->
+                            @* Category *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">
                                     <i class="bi bi-grid"></i> Categories
                                 </a>
                             </li>
-                            <!-- Product Link -->
+                            @* Product *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">
                                     <i class="bi bi-box-seam"></i> Products
                                 </a>
                             </li>
-                            <!-- Company Link -->
+                            @* Company *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Company" asp-action="Index">
                                     <i class="bi bi-building"></i> Company
                                 </a>
                             </li>
-                           <!-- Order Management Link -->
+                           @* Order Management *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">
                                     <i class="bi bi-box-seam-fill"></i> Order Management
                                 </a>
                             </li>
 
-                            <!-- Create User Link -->
+                            @* Create User *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">
                                     <i class="bi bi-person-plus"></i> Create User
                                 </a>
                             </li>
-
-
-
                     }
 
                         
                     </ul>
-                    <!-- Cart Component -->
+                    @* Cart *@
                     <div class="d-flex align-items-center me-3">
                         <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link position-relative text-dark">
-                            
                                 @* using view Components *@
                                 
                             @await Component.InvokeAsync("ShoppingCart")
@@ -148,11 +137,9 @@
 
                         </a>
                     </div>
-
-
                     <partial name="_LoginPartial">
 
-                    <!-- Simple Circular Dark Mode Toggle -->
+                        @* Dark Mode Toggle *@
                     <div class="d-flex align-items-center">
                         <button id="theme-toggle" class="btn-theme-toggle" title="Toggle Dark Mode" aria-label="Toggle dark mode">
                             <i class="bi bi-sun-fill theme-icon"></i>
@@ -163,7 +150,7 @@
         </nav>
     </header>
 
-    <!-- ===== Main Content Area ===== -->
+    @* Main Content Area *@
     <div class="container">
         <main role="main" class="pb-3">
             <partial name="_Notification"> </partial>
@@ -171,41 +158,41 @@
         </main>
     </div>
 
-    <!-- ===== Footer ===== -->
-    <footer class="border-top footer text-muted mt-4 py-2">
+    @* foother *@
+    <footer class="border-top footer mt-4 py-3">
         <div class="container text-center">
             <p class="mb-0 small">
-                &copy; @DateTime.Now.Year <strong>VALHAUS</strong>
+                <a href="https://github.com/aboubakr-jelloulat/VALHAUS" target="_blank" class="text-muted text-decoration-none">
+                    <i class="bi bi-github"></i> Star on GitHub
+                </a>
             </p>
         </div>
     </footer>
 
-    <!-- ===== Scripts (IN CORRECT ORDER) ===== -->
-    <!-- 1. jQuery FIRST (ONLY ONCE) -->
+
+    @* jQuery Js*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-    <!-- 2. Bootstrap JS -->
+    @* Bootstrap Js*@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- 3. Nimbus Theme JS -->
+    @* Nimbus Theme JS *@
     <script src="~/js/nimbus/bootstrap.bundle.min.js"></script>
     <script src="~/js/nimbus/vendors/aos.js"></script>
     <script src="~/js/nimbus/custom.js"></script>
 
-    <!-- 4. Dark Mode Toggle -->
+    @* Dark Mode Toggle *@
     <script src="~/js/DarkMode/dark-mode-toggle.js"></script>
 
-    <!-- 5. Site JS -->
+    @* Site JS *@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- 6. DataTables (SINGLE VERSION - After jQuery) -->
+    @* DataTables *@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     @* SweetAlert *@
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- 7. Page-Specific Scripts (Your product.js will load here) -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

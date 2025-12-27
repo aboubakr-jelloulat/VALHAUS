@@ -247,7 +247,7 @@ namespace VALHAUS.Areas.Customer.Controllers
                     );
                     _unitOfWork.Save();
                 }
-
+                HttpContext.Session.Clear();
                 
               
             }

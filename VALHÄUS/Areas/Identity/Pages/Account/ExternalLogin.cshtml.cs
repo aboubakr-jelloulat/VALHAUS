@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Valhaus.Models.Models;
+using Valhaus.Utils;
 
 namespace VALHAUS.Areas.Identity.Pages.Account
 {
@@ -84,6 +86,24 @@ namespace VALHAUS.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            [Required]
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+
+            //[Display(Name = "Street Address")]
+            //public string? StreetAddress { get; set; }
+
+            //[Display(Name = "City")]
+            //public string? City { get; set; }
+
+            //[Display(Name = "State")]
+            //public string? State { get; set; }
+
+            //[Display(Name = "Postal Code")]
+            //public string? PostalCode { get; set; }
+
+            //[Display(Name = "Phone Number")]
+            //public string? PhoneNumber { get; set; }
         }
         
         public IActionResult OnGet() => RedirectToPage("./Login");
@@ -124,20 +144,42 @@ namespace VALHAUS.Areas.Identity.Pages.Account
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                // NEW: Create user automatically - no confirmation page!
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+                if (string.IsNullOrEmpty(email))
                 {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                    ErrorMessage = "Email not received from Google.";
+                    return RedirectToPage("./Login");
                 }
-                return Page();
+
+                // Create user
+                var user = CreateUser();
+                await _userStore.SetUserNameAsync(user, email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
+                user.Name = name ?? email;
+                user.EmailConfirmed = true; // Skip email confirmation
+
+                var createResult = await _userManager.CreateAsync(user);
+
+                if (createResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, StaticDetails.Role_Customer);
+                    createResult = await _userManager.AddLoginAsync(user, info);
+
+                    if (createResult.Succeeded)
+                    {
+                        _logger.LogInformation("User created via {LoginProvider}", info.LoginProvider);
+                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        return LocalRedirect(returnUrl); //  Go straight to home!
+                    }
+                }
+
+                ErrorMessage = "Unable to create account.";
+                return RedirectToPage("./Login");
             }
         }
-
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -156,13 +198,28 @@ namespace VALHAUS.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
+                user.Name           = Input.Name;
+
+                //user.PhoneNumber    = Input.PhoneNumber;
+                //user.StreetAddress  = Input.StreetAddress;
+                //user.City           = Input.City;
+                //user.State          = Input.State;
+                //user.PostalCode     = Input.PostalCode;
+
+
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    // Add default Customer role
+                     await _userManager.AddToRoleAsync(user, StaticDetails.Role_Customer);
+
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        
+                       
 
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -197,11 +254,12 @@ namespace VALHAUS.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        // here i add the another properties that i need if i need to register with google 
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {

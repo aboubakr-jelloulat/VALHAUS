@@ -126,9 +126,12 @@ namespace VALHAUS.Areas.Identity.Pages.Account
             [Display(Name = "Postal Code")]
             public string? PostalCode { get; set; }
 
+            [Display(Name = "Phone Number")]
+            public string? PhoneNumber { get; set; }
+
             public int? CompanyId { get; set; }
 
-            public IEnumerable<SelectListItem> CompanyList { get; set; }    
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
 
             /// <summary>
             /// Roles ...
@@ -232,7 +235,11 @@ namespace VALHAUS.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(StaticDetails.Role_Admin))
+                            TempData["success"] = "New User Created Successfully";
+                        else
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+
                         return LocalRedirect(returnUrl);
                     }
                 }

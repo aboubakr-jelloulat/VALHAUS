@@ -30,6 +30,8 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
+    <Folder Include="wwwroot\css\Login\" />
+    <Folder Include="wwwroot\css\Register\" />
     <Folder Include="wwwroot\images\product\" />
     <Folder Include="wwwroot\js\Company\" />
   </ItemGroup>

@@ -180,89 +180,83 @@ namespace VALHAUS.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
-                var user = CreateUser();
+                // Repopulate lists if model invalid
+                Input.RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem { Text = i, Value = i });
+                Input.CompanyList = _unitOfWork.Companies.GetAll().Select(i => new SelectListItem { Text = i.Name, Value = i.Id.ToString() });
+                return Page();
+            }
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                
-                // Populate ApplicationUser fields
-                user.Name = Input.Name;
-                user.StreetAddress = Input.StreetAddress;
-                user.City = Input.City;
-                user.State = Input.State;
-                user.PostalCode = Input.PostalCode;
-                
-                if (Input.Role == StaticDetails.Role_Company)
+            // Create user instance
+            var user = CreateUser();
+
+            // Set username & email on the store
+            await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+            //  mark email as confirmed 
+            user.EmailConfirmed = true;
+
+            // Populate other ApplicationUser fields
+            user.Name = Input.Name;
+            user.StreetAddress = Input.StreetAddress;
+            user.City = Input.City;
+            user.State = Input.State;
+            user.PostalCode = Input.PostalCode;
+            user.PhoneNumber = Input.PhoneNumber;
+
+            if (Input.Role == StaticDetails.Role_Company)
+            {
+                user.CompanyId = Input.CompanyId;
+            }
+
+            // Create the user (this persists to DB)
+            var result = await _userManager.CreateAsync(user, Input.Password);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");
+
+                // Assign role
+                if (!string.IsNullOrEmpty(Input.Role))
                 {
-                    user.CompanyId = Input.CompanyId;
+                    await _userManager.AddToRoleAsync(user, Input.Role);
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, StaticDetails.Role_Customer);
                 }
 
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                // NOTE: we are intentionally NOT sending an email confirmation.
+                // Since user.EmailConfirmed = true and RequireConfirmedAccount = false,
+                // we can sign them in directly.
 
-                if (result.Succeeded)
+                if (User.IsInRole(StaticDetails.Role_Admin))
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-
-                    // assign the selected role to the user after registration
-
-                    if (!string.IsNullOrEmpty(Input.Role))
-                    {
-                        await _userManager.AddToRoleAsync(user, Input.Role);
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, StaticDetails.Role_Customer);
-                    }
-
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        if (User.IsInRole(StaticDetails.Role_Admin))
-                            TempData["success"] = "New User Created Successfully";
-                        else
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-
-                        return LocalRedirect(returnUrl);
-                    }
+                    TempData["success"] = "New User Created Successfully";
+                    // Admin created user — don't sign in the created user. Redirect to return page (or admin list)
+                    return LocalRedirect(returnUrl);
                 }
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    // Sign in the newly created user and redirect to home (or returnUrl)
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
                 }
             }
 
-            // If we got this far, something failed, redisplay form
-            // IMPORTANT: Repopulate RoleList and CompanyList so the dropdowns show options again
-            Input.RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem
+            // If we got here, creation failed — show errors
+            foreach (var error in result.Errors)
             {
-                Text = i,
-                Value = i
-            });
-            
-            Input.CompanyList = _unitOfWork.Companies.GetAll().Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString()
-            });
-            
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            // Repopulate lists then redisplay
+            Input.RoleList = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem { Text = i, Value = i });
+            Input.CompanyList = _unitOfWork.Companies.GetAll().Select(i => new SelectListItem { Text = i.Name, Value = i.Id.ToString() });
+
             return Page();
         }
 

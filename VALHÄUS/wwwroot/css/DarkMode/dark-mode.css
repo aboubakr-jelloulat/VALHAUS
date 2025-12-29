@@ -1,16 +1,10 @@
-﻿/* ==============================================
-   VALHAUS Dark Mode Styles
-   Simple Circular Toggle Button + Dark Theme
-   ============================================== */
+﻿ 
 
-/* ===== Smooth Transitions ===== */
 * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ============================================
-   SIMPLE CIRCULAR DARK MODE BUTTON
-   ============================================ */
+/*  CIRCULAR DARK MODE BUTTON   */
 
 .btn-theme-toggle {
     width: 42px;
@@ -66,7 +60,7 @@
         border-color: #3d3d3d;
     }
 
-/* ===== Dark Mode Theme Styles ===== */
+/*  Dark Mode Theme Styles  */
 
 /* Dark background for whole page */
 [data-bs-theme="dark"] body {
@@ -160,9 +154,7 @@
     color: #adb5bd !important;
 }
 
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
+/* RESPONSIVE DESIGN */
 
 @media (max-width: 768px) {
     .btn-theme-toggle {

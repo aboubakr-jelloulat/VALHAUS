@@ -1,260 +1,16 @@
 ﻿@model ShoppingCartVM
 
-<style>
-    :root {
-        --primary-color: #6366f1;
-        --primary-hover: #4f46e5;
-        --success-color: #10b981;
-        --danger-color: #ef4444;
-        --card-bg: #ffffff;
-        --text-primary: #1f2937;
-        --text-secondary: #6b7280;
-        --border-color: #e5e7eb;
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
+@section Styles {
+    <link rel="stylesheet" href="~/css/Cart/summary.css" asp-append-version="true" />
+}
 
-    [data-bs-theme="dark"] {
-        --primary-color: #818cf8;
-        --primary-hover: #6366f1;
-        --success-color: #34d399;
-        --danger-color: #f87171;
-        --card-bg: #1f2937;
-        --text-primary: #f9fafb;
-        --text-secondary: #9ca3af;
-        --border-color: #374151;
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .order-summary-container {
-        min-height: 100vh;
-        padding: 2rem 0;
-        background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
-    }
-
-    .summary-card {
-        background: var(--card-bg);
-        border-radius: 1rem;
-        box-shadow: var(--shadow-lg);
-        overflow: hidden;
-        border: 1px solid var(--border-color);
-    }
-
-    .summary-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
-        padding: 2rem;
-        color: white;
-    }
-
-        .summary-header h3 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.75rem;
-        }
-
-    .back-btn {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        padding: 0.5rem 1.25rem;
-        border-radius: 0.5rem;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-    }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            color: white;
-        }
-
-    .summary-body {
-        padding: 2rem;
-    }
-
-    .section-title {
-        color: var(--primary-color);
-        font-weight: 700;
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 1.5rem;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-
-    .form-group {
-        margin-bottom: 1.25rem;
-    }
-
-    .form-label {
-        color: var(--text-primary);
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .form-control {
-        background: var(--card-bg);
-        border: 2px solid var(--border-color);
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        color: var(--text-primary);
-        transition: all 0.3s ease;
-        font-size: 1rem;
-    }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-            outline: none;
-            background: var(--card-bg);
-        }
-
-    [data-bs-theme="dark"] .form-control {
-        background: #111827;
-    }
-
-        [data-bs-theme="dark"] .form-control:focus {
-            background: #111827;
-        }
-
-    .order-item {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 0.75rem;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-
-        .order-item:hover {
-            box-shadow: var(--shadow);
-            transform: translateY(-2px);
-        }
-
-    .order-item-title {
-        color: var(--text-primary);
-        font-weight: 600;
-        font-size: 1rem;
-        margin: 0 0 0.25rem 0;
-    }
-
-    .order-item-quantity {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .order-item-price {
-        color: var(--primary-color);
-        font-weight: 700;
-        font-size: 1.125rem;
-    }
-
-    .order-total-card {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        color: white;
-        margin-top: 1.5rem;
-    }
-
-    .order-total-label {
-        font-size: 1rem;
-        font-weight: 500;
-        opacity: 0.9;
-    }
-
-    .order-total-amount {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .delivery-info {
-        background: rgba(99, 102, 241, 0.1);
-        border-left: 4px solid var(--primary-color);
-        padding: 1rem 1.25rem;
-        border-radius: 0.5rem;
-        margin: 1.5rem 0;
-    }
-
-    .delivery-info-label {
-        color: var(--primary-color);
-        font-weight: 700;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.25rem;
-    }
-
-    .delivery-info-dates {
-        color: var(--text-primary);
-        font-size: 1rem;
-        font-weight: 600;
-        margin: 0;
-    }
-
-    .place-order-btn {
-        background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-        border: none;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 0.75rem;
-        font-weight: 700;
-        font-size: 1.125rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
-    }
-
-        .place-order-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        }
-
-    .shipping-section, .summary-section {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-    }
-
-    .text-danger {
-        color: var(--danger-color) !important;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-        display: block;
-    }
-
-    @@media (max-width: 991px) {
-        .summary-body {
-            padding: 1.5rem;
-        }
-
-        .order-summary-container {
-            padding: 1rem 0;
-        }
-
-        .summary-header h3 {
-            font-size: 1.5rem;
-        }
-    }
-</style>
+<!-- Video Background -->
+<div class="video-background">
+    <video autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-elegant-luxury-fashion-store-interior-27496-large.mp4" type="video/mp4">
+    </video>
+</div>
+<div class="video-overlay"></div>
 
 <div class="order-summary-container">
     <div class="container">
@@ -264,7 +20,7 @@
                 <div class="summary-header">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <h3>📦 Order Summary</h3>
+                            <h3>Order Summary</h3>
                         </div>
                         <div class="col-md-6 text-md-end mt-3 mt-md-0">
                             <a asp-action="Index" class="back-btn">
@@ -280,23 +36,35 @@
                         <!-- Shipping Details -->
                         <div class="col-lg-7 mb-4 mb-lg-0">
                             <div class="shipping-section">
-                                <h4 class="section-title">📍 Shipping Details</h4>
+                                <h4 class="section-title">
+                                    Shipping Details
+                                </h4>
 
                                 <div class="form-group">
                                     <label class="form-label">Full Name</label>
-                                    <input asp-for="OrderHeader.Name" class="form-control" placeholder="Enter your full name" />
+                                    <input asp-for="OrderHeader.Name"
+                                           class="form-control"
+                                           value="@Model.OrderHeader.Name"
+                                           placeholder="Enter your full name" />
                                     <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label">Phone Number <span style="color: var(--danger-color);">*</span></label>
-                                    <input asp-for="OrderHeader.PhoneNumber" class="form-control" placeholder="Enter your phone number" required />
+                                    <label class="form-label">Phone Number</label>
+                                    <input asp-for="OrderHeader.PhoneNumber"
+                                           class="form-control"
+                                           value="@Model.OrderHeader.PhoneNumber"
+                                           placeholder="Enter your phone number"
+                                           required />
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label">Street Address</label>
-                                    <input asp-for="OrderHeader.StreetAddress" class="form-control" placeholder="Enter your street address" />
+                                    <input asp-for="OrderHeader.StreetAddress"
+                                           class="form-control"
+                                           value="@Model.OrderHeader.StreetAddress"
+                                           placeholder="Enter your street address" />
                                     <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
                                 </div>
 
@@ -304,14 +72,20 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">City</label>
-                                            <input asp-for="OrderHeader.City" class="form-control" placeholder="City" />
+                                            <input asp-for="OrderHeader.City"
+                                                   class="form-control"
+                                                   value="@Model.OrderHeader.City"
+                                                   placeholder="City" />
                                             <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">State</label>
-                                            <input asp-for="OrderHeader.State" class="form-control" placeholder="State" />
+                                            <input asp-for="OrderHeader.State"
+                                                   class="form-control"
+                                                   value="@Model.OrderHeader.State"
+                                                   placeholder="State" />
                                             <span asp-validation-for="OrderHeader.State" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -319,7 +93,10 @@
 
                                 <div class="form-group">
                                     <label class="form-label">Postal Code</label>
-                                    <input asp-for="OrderHeader.PostalCode" class="form-control" placeholder="Postal code" />
+                                    <input asp-for="OrderHeader.PostalCode"
+                                           class="form-control"
+                                           value="@Model.OrderHeader.PostalCode"
+                                           placeholder="Postal code" />
                                     <span asp-validation-for="OrderHeader.PostalCode" class="text-danger"></span>
                                 </div>
                             </div>
@@ -328,48 +105,53 @@
                         <!-- Order Summary -->
                         <div class="col-lg-5">
                             <div class="summary-section">
-                                <h4 class="section-title">🛍️ Your Order</h4>
+                                <h4 class="section-title">
+                                    Your Order
+                                </h4>
 
-                                @foreach (var details in Model.ShoppingCartList)
+                                @if (Model.ShoppingCartList != null && Model.ShoppingCartList.Any())
                                 {
-                                    <div class="order-item">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h6 class="order-item-title">@details.Product.Title</h6>
-                                                <p class="order-item-quantity">
-                                                    <span>Quantity: <strong>@details.Count</strong></span>
-                                                </p>
-                                            </div>
-                                            <div class="text-end">
-                                                <div class="order-item-price">
-                                                    @((details.Price * details.Count).ToString("c"))
+                                    @foreach (var details in Model.ShoppingCartList)
+                                    {
+                                        <div class="order-item">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="order-item-title">@details.Product.Title</h6>
+                                                    <p class="order-item-quantity">
+                                                        Quantity: <strong>@details.Count</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="order-item-price">
+                                                        @((details.Price * details.Count).ToString("c"))
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="order-item">
+                                        <p style="color: rgba(255, 255, 255, 0.6); text-align: center; margin: 0;">
+                                            Your cart is empty
+                                        </p>
                                     </div>
                                 }
 
                                 <div class="order-total-card">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <p class="order-total-label mb-1">Total Amount</p>
+                                            <p class="order-total-label">Total Amount</p>
                                             <p class="order-total-amount">@Model.OrderHeader.OrderTotal.ToString("c")</p>
                                         </div>
                                         <div style="font-size: 3rem; opacity: 0.3;">💳</div>
                                     </div>
                                 </div>
 
-                                <div class="delivery-info">
-                                    <p class="delivery-info-label">🚚 Estimated Delivery</p>
-                                    <p class="delivery-info-dates">
-                                        @DateTime.Now.AddDays(7).ToString("MMM dd, yyyy") - @DateTime.Now.AddDays(14).ToString("MMM dd, yyyy")
-                                    </p>
-                                </div>
-
-
                                 <!-- Place Order -->
-                                <button type="submit" class="place-order-btn w-100">
-                                    Place Order →
+                                <button type="submit" class="place-order-btn">
+                                    Complete Order
                                 </button>
                             </div>
                         </div>
@@ -384,4 +166,30 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        
+
+        // Auto-populate user information from server-side model
+        document.addEventListener('DOMContentLoaded', function() {
+            // The form fields will be populated by ASP.NET model binding
+            // If you need to fetch user data via AJAX, uncomment below:
+
+            /*
+            fetch('/api/user/info')
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        document.querySelector('[name="OrderHeader.Name"]').value = data.name || '';
+                        document.querySelector('[name="OrderHeader.PhoneNumber"]').value = data.phoneNumber || '';
+                        document.querySelector('[name="OrderHeader.StreetAddress"]').value = data.streetAddress || '';
+                        document.querySelector('[name="OrderHeader.City"]').value = data.city || '';
+                        document.querySelector('[name="OrderHeader.State"]').value = data.state || '';
+                        document.querySelector('[name="OrderHeader.PostalCode"]').value = data.postalCode || '';
+                    }
+                })
+                .catch(error => console.error('Error loading user info:', error));
+            */
+        });
+    </script>
 }

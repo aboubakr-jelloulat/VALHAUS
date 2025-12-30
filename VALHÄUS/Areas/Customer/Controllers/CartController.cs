@@ -84,6 +84,7 @@ namespace VALHAUS.Areas.Customer.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Summary()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;

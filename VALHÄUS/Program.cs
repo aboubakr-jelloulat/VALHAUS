@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -6,13 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using Valhaus.Data.Data;
+using Valhaus.Data.DbInitializer;
 using Valhaus.Data.Repository.IRepository;
 using Valhaus.Data.Repository.Repositories;
 using Valhaus.Utils;
 using VALHAUS.Areas.Customer.Controllers;
-
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +48,9 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
 
+
+// DbInitializer
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 
 builder.Services.AddRazorPages();
@@ -89,6 +92,9 @@ app.UseAuthentication(); // Required for Identity authentication
 app.UseAuthorization();
 
 app.UseSession();
+
+SedDb(); // IDbInitializer
+
 app.MapRazorPages(); // Required for Identity Razor Pages (Login/Register)
 
 app.MapControllerRoute(
@@ -98,3 +104,16 @@ app.MapControllerRoute(
 app.Run();
 
 
+void    SedDb()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}
+/*
+    We create a scope at startup to safely resolve scoped services like DbContext,
+    then run a DbInitializer to apply pending migrations and seed required roles before the application starts handling requests.
+ 
+ */

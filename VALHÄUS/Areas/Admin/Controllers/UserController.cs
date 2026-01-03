@@ -52,11 +52,43 @@ public class UserController : Controller
 
 
     [HttpPost]
+    public IActionResult LockUnlock([FromBody] string id)
+    {
+
+        var objFromDb = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
+        if (objFromDb is null)
+        {
+            return Json(new { success = false, message = "Error while Locking/Unlocking" });
+        }
+
+        // Check if the user is currently locked
+        if (objFromDb.LockoutEnd is not null && objFromDb.LockoutEnd > DateTime.Now)
+        {
+            //user is currently locked and we need to unlock them
+            objFromDb.LockoutEnd = DateTime.Now;
+        }
+        else
+        {
+            objFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
+        }
+        _unitOfWork.ApplicationUser.Update(objFromDb);
+        _unitOfWork.Save();
+        return Json(new { success = true, message = "Operation Successful" });
+    }
+
+
+    public IActionResult RoleManagment(string userId)
+    {
+
+        return View();
+    }
+
+
+    [HttpPost]
     public IActionResult Delete(string id)
     {
         try
         {
-
             var user = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
 
             if (user == null)

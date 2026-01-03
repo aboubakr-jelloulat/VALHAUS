@@ -81,23 +81,26 @@ function loadDataTable() {
 }
 
 // Lock / Unlock user
-function LockUnlock(userId) {
+function LockUnlock(id) {
     $.ajax({
         type: "POST",
-        url: "/admin/user/lockunlock",
-        data: { id: userId },
-        success: function (response) {
-            if (response.success) {
-                dataTable.ajax.reload(null, false);
+        url: '/Admin/User/LockUnlock',
+        data: JSON.stringify(id),           // send raw JSON
+        contentType: "application/json",    // tell server it’s JSON
+        success: function (data) {
+            if (data.success) {
+                toastr.success(data.message);
+                dataTable.ajax.reload(null, false); // reload table without changing page
             } else {
-                alert(response.message || "Action failed");
+                toastr.error(data.message || "Action failed");
             }
         },
         error: function () {
-            alert("Error while processing request");
+            toastr.error("Error while processing request");
         }
     });
 }
+
 
 // Delete user function
 function DeleteUser(userId) {
@@ -121,7 +124,8 @@ function DeleteUser(userId) {
 
                         
                         //If you have a delete button with data attribute
-                        $(`button[onclick="DeleteUser(${userId})"]`).closest('tr').remove();
+                        $(`button[onclick="Delete(${userId})"]`).closest('tr').remove();
+
 
                     } else {
                         toastr.error(data.message || 'Failed to delete user');

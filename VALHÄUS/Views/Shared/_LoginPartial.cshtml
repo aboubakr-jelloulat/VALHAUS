@@ -266,14 +266,7 @@
                 <i class="bi bi-person-gear"></i>
                 <span>My Account</span>
             </a>
-            <a class="auth-dropdown-item" href="#">
-                <i class="bi bi-bag-check"></i>
-                <span>Orders</span>
-            </a>
-            <a class="auth-dropdown-item" href="#">
-                <i class="bi bi-heart"></i>
-                <span>Wishlist</span>
-            </a>
+           
             <div class="dropdown-divider"></div>
             <form class="m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "Customer" })">
                 <button type="submit" class="auth-dropdown-item logout-btn">

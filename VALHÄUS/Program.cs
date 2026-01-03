@@ -17,15 +17,46 @@ using VALHAUS.Areas.Customer.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<KestrelServerOptions>(options =>
+// Configure port - use PORT environment variable (Render) or default to 8080
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+
+// Configure Kestrel
+builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 104857600;
 });
 
+// Set URLs to listen on (works for both local Windows and Render deployment)
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options
-    .UseSqlServer(builder.Configuration.GetConnectionString("constr")));
+
+
+// Database configuration - Use PostgreSQL in production, SQL Server in development
+if (builder.Environment.IsProduction())
+{
+    // PostgreSQL for production (Railway)
+    // Railway provides DATABASE_URL, fallback to ConnectionStrings:constr
+    var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") 
+                          ?? builder.Configuration.GetConnectionString("constr");
+    
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options
+        .UseNpgsql(connectionString, npgsqlOptions =>
+        {
+            npgsqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorCodesToAdd: null);
+        }));
+}
+else
+{
+    // SQL Server for local development
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options
+        .UseSqlServer(builder.Configuration.GetConnectionString("constr")));
+}
+
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders() ;
@@ -77,7 +108,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development (Render handles SSL termination)
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseStaticFiles();
 
 // configure Strip Api Keys

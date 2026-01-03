@@ -31,27 +31,32 @@ function loadDataTable() {
                         ? new Date(data.lockoutEnd).getTime()
                         : 0;
 
-                    // Determine lock/unlock button
+                    // Lock & Unlock button
                     let lockButton = lockout > today
                         ? `<a onclick="LockUnlock('${data.id}')" class="btn-user-action btn-user-lock">
-                                <i class="bi bi-lock-fill"></i> Lock
+                               <i class="bi bi-lock-fill"></i> Lock
                            </a>`
                         : `<a onclick="LockUnlock('${data.id}')" class="btn-user-action btn-user-unlock">
-                                <i class="bi bi-unlock-fill"></i> Unlock
+                               <i class="bi bi-unlock-fill"></i> Unlock
                            </a>`;
 
-                    return `
-                        <div class="user-action-btns">
-                            ${lockButton}
-                            <a href="/admin/user/RoleManagment?userId=${data.id}" 
-                               class="btn-user-action btn-user-permission">
-                                <i class="bi bi-pencil-square"></i> Permissions
-                            </a>
-                            <a onclick="DeleteUser('${data.id}')" 
-                               class="btn-user-action btn-user-delete">
-                                <i class="bi bi-trash-fill"></i> Remove
-                            </a>
-                        </div>`;
+                    // Permissions button
+                    let permissionButton = `<a href="/admin/user/RoleManagment?userId=${data.id}" 
+                                                class="btn-user-action btn-user-permission">
+                                                <i class="bi bi-pencil-square"></i> Permissions
+                                            </a>`;
+
+                    // Delete button 
+                    let deleteButton = `<a onclick="DeleteUser('${data.id}')" 
+                                           class="btn-user-action btn-user-delete">
+                                           <i class="bi bi-trash-fill"></i> Remove
+                                        </a>`;
+
+                    return `<div class="user-action-btns">
+                                ${lockButton}
+                                ${permissionButton}
+                                ${deleteButton}
+                            </div>`;
                 },
                 width: "25%",
                 orderable: false,
@@ -75,6 +80,7 @@ function loadDataTable() {
     });
 }
 
+// Lock / Unlock user
 function LockUnlock(userId) {
     $.ajax({
         type: "POST",
@@ -93,22 +99,38 @@ function LockUnlock(userId) {
     });
 }
 
+// Delete user function
 function DeleteUser(userId) {
-    if (confirm("Are you sure you want to remove this user? This action cannot be undone.")) {
-        $.ajax({
-            type: "POST",
-            url: "/admin/user/delete",
-            data: { id: userId },
-            success: function (response) {
-                if (response.success) {
-                    dataTable.ajax.reload(null, false);
-                } else {
-                    alert(response.message || "Failed to delete user");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/admin/user/delete',
+                type: 'POST',
+                data: { id: userId },
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+
+                        
+                        //If you have a delete button with data attribute
+                        $(`button[onclick="DeleteUser(${userId})"]`).closest('tr').remove();
+
+                    } else {
+                        toastr.error(data.message || 'Failed to delete user');
+                    }
+                },
+                error: function () {
+                    toastr.error('An error occurred while deleting the user');
                 }
-            },
-            error: function () {
-                alert("Error while deleting user");
-            }
-        });
-    }
+            });
+        }
+    });
 }

@@ -76,5 +76,6 @@ namespace Valhaus.Data.Repository.Repositories
             }
             return query.ToList();
         }
+ 
     }
 }

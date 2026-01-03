@@ -1,0 +1,373 @@
+﻿
+/* JetBrains Mono Font  */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+/* User Table Container - Even Larger Size */
+.user-table-container {
+    max-width: 1600px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee6d8;
+}
+
+/* User Table Specific Styles */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+    .user-table thead {
+        background: linear-gradient(135deg, #f8f6f3 0%, #f0ebe3 100%);
+    }
+
+        .user-table thead th {
+            padding: 16px 20px;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: #1A1A1A;
+            border-bottom: 2px solid #d4af37;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+    .user-table tbody td {
+        padding: 18px 20px;
+        font-size: 14px;
+        color: #333;
+        background: #fff;
+        transition: background 0.3s ease;
+        vertical-align: middle;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 400;
+    }
+
+    .user-table tbody tr:nth-child(even) td {
+        background: #faf8f6;
+    }
+
+    .user-table tbody tr:hover td {
+        background: #fdf6e8;
+    }
+
+    /* Actions Column */
+    .user-table thead th.actions-col {
+        text-align: center;
+        width: 180px;
+    }
+
+    .user-table tbody td.actions-col {
+        text-align: center;
+    }
+
+/* Action Buttons Container */
+.user-action-btns {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Small Compact Buttons - Gold Theme */
+.btn-user-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1.5px solid;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+    .btn-user-action i {
+        font-size: 12px;
+    }
+
+/* Lock Button - Gold Red */
+.btn-user-lock {
+    background: #fff;
+    color: #dc3545;
+    border-color: rgba(220, 53, 69, 0.3);
+}
+
+    .btn-user-lock:hover {
+        background: #dc3545;
+        color: #ffffff;
+        border-color: #dc3545;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(220, 53, 69, 0.3);
+    }
+
+/* Unlock Button - Gold Green */
+.btn-user-unlock {
+    background: #fff;
+    color: #28a745;
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+    .btn-user-unlock:hover {
+        background: #28a745;
+        color: #ffffff;
+        border-color: #28a745;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+    }
+
+/* Permission Button - Gold */
+.btn-user-permission {
+    background: #fff;
+    color: #d4af37;
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+    .btn-user-permission:hover {
+        background: linear-gradient(135deg, #d4af37 0%, #f0d78c 100%);
+        color: #ffffff;
+        border-color: #d4af37;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(212, 175, 55, 0.4);
+    }
+
+/* DataTables Controls Styling */
+#tblData_wrapper .dataTables_length,
+#tblData_wrapper .dataTables_filter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #5a5a5a;
+    margin-bottom: 20px;
+}
+
+#tblData_wrapper .dataTables_length {
+    float: left;
+}
+
+#tblData_wrapper .dataTables_filter {
+    float: right;
+}
+
+#tblData_wrapper .dataTables_length select {
+    padding: 8px 12px;
+    border: 1.5px solid #eee6d8;
+    border-radius: 6px;
+    margin: 0 8px;
+    font-size: 13px;
+    background: #faf8f6;
+    transition: all 0.3s ease;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+    #tblData_wrapper .dataTables_length select:focus {
+        outline: none;
+        border-color: #d4af37;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+#tblData_wrapper .dataTables_filter input {
+    padding: 8px 16px;
+    border: 1.5px solid #eee6d8;
+    border-radius: 6px;
+    margin-left: 8px;
+    font-size: 13px;
+    background: #faf8f6;
+    transition: all 0.3s ease;
+    width: 250px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+    #tblData_wrapper .dataTables_filter input:focus {
+        outline: none;
+        border-color: #d4af37;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        background: #ffffff;
+    }
+
+/* Info and Pagination */
+#tblData_wrapper .dataTables_info {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #5a5a5a;
+    padding: 20px 0 10px;
+}
+
+#tblData_wrapper .dataTables_paginate {
+    padding: 20px 0 10px;
+    text-align: right;
+}
+
+/* Pagination Buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 8px 14px !important;
+    margin: 0 3px !important;
+    border-radius: 6px !important;
+    border: 1px solid #eee6d8 !important;
+    background: #ffffff !important;
+    color: #5a5a5a !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    font-size: 13px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #faf8f6 !important;
+        border-color: #d4af37 !important;
+        color: #1A1A1A !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: linear-gradient(135deg, #d4af37 0%, #f0d78c 100%) !important;
+        border-color: #d4af37 !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.4 !important;
+        cursor: not-allowed !important;
+    }
+
+/* Remove default DataTables styling */
+table.dataTable.no-footer {
+    border-bottom: none !important;
+}
+
+table.dataTable {
+    margin-top: 0 !important;
+}
+
+/* Dark Mode Support */
+[data-bs-theme="dark"] .user-table-container {
+    background: #1f1f1f;
+    border-color: rgba(212, 175, 55, 0.2);
+}
+
+[data-bs-theme="dark"] .user-table thead {
+    background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
+}
+
+    [data-bs-theme="dark"] .user-table thead th {
+        color: #d4af37;
+    }
+
+[data-bs-theme="dark"] .user-table tbody td {
+    background: #1f1f1f;
+    color: #e0e0e0;
+}
+
+[data-bs-theme="dark"] .user-table tbody tr:nth-child(even) td {
+    background: #252525;
+}
+
+[data-bs-theme="dark"] .user-table tbody tr:hover td {
+    background: #2a2a2a;
+}
+
+[data-bs-theme="dark"] .btn-user-lock {
+    background: #2a2a2a;
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.3);
+}
+
+[data-bs-theme="dark"] .btn-user-unlock {
+    background: #2a2a2a;
+    color: #51cf66;
+    border-color: rgba(81, 207, 102, 0.3);
+}
+
+[data-bs-theme="dark"] .btn-user-permission {
+    background: #2a2a2a;
+    color: #f0d78c;
+    border-color: rgba(240, 215, 140, 0.3);
+}
+
+[data-bs-theme="dark"] #tblData_wrapper .dataTables_filter input,
+[data-bs-theme="dark"] #tblData_wrapper .dataTables_length select {
+    background: #2a2a2a;
+    border-color: rgba(212, 175, 55, 0.3);
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #2a2a2a !important;
+    border-color: rgba(212, 175, 55, 0.3) !important;
+    color: #adb5bd !important;
+}
+
+    [data-bs-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #333333 !important;
+        color: #ffffff !important;
+    }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .user-table-container {
+        max-width: 95%;
+        padding: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-table-container {
+        padding: 20px;
+        margin: 40px 15px;
+    }
+
+    .user-table thead {
+        display: none;
+    }
+
+    .user-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #eee6d8;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .user-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee6d8;
+    }
+
+        .user-table tbody td:last-child {
+            border-bottom: none;
+        }
+
+        .user-table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #d4af37;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+    .user-action-btns {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-user-action {
+        width: 100%;
+        justify-content: center;
+    }
+}

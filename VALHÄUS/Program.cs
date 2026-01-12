@@ -38,9 +38,9 @@ if (builder.Environment.IsProduction())
 {
     // PostgreSQL for production (Railway)
     // Railway provides DATABASE_URL, fallback to ConnectionStrings:constr
-    var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") 
+    var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
                           ?? builder.Configuration.GetConnectionString("constr");
-    
+
     builder.Services.AddDbContext<ApplicationDbContext>(options => options
         .UseNpgsql(connectionString, npgsqlOptions =>
         {
@@ -59,7 +59,7 @@ else
 
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders() ;
+    .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 // Configure Strip
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
@@ -139,7 +139,7 @@ app.MapControllerRoute(
 app.Run();
 
 
-void    SedDb()
+void SedDb()
 {
     using (var scope = app.Services.CreateScope())
     {

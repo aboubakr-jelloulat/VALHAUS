@@ -40,12 +40,6 @@ function loadDataTable() {
                                <i class="bi bi-unlock-fill"></i> Unlock
                            </a>`;
 
-                    // Permissions button
-                    let permissionButton = `<a href="/admin/user/RoleManagment?userId=${data.id}" 
-                                                class="btn-user-action btn-user-permission">
-                                                <i class="bi bi-pencil-square"></i> Permissions
-                                            </a>`;
-
                     // Delete button 
                     let deleteButton = `<a onclick="DeleteUser('${data.id}')" 
                                            class="btn-user-action btn-user-delete">
@@ -54,7 +48,6 @@ function loadDataTable() {
 
                     return `<div class="user-action-btns">
                                 ${lockButton}
-                                ${permissionButton}
                                 ${deleteButton}
                             </div>`;
                 },

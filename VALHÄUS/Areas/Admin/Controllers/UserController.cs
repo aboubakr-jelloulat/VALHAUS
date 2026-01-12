@@ -77,13 +77,6 @@ public class UserController : Controller
     }
 
 
-    public IActionResult RoleManagment(string userId)
-    {
-
-        return View();
-    }
-
-
     [HttpPost]
     public IActionResult Delete(string id)
     {

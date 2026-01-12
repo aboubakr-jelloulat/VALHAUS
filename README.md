@@ -1,6 +1,6 @@
 # VALHÄUS
 
-.NET 8 e-commerce platform with Stripe payments and Google OAuth.
+A full-stack e commerce platform built with ASP.NET Core MVC. Features secure payment processing through Stripe, Google OAuth authentication, and role-based authorization for admins and customers. Uses Entity Framework Core with SQL Server for development and PostgreSQL for production deployments.
 
 ## Setup
 
